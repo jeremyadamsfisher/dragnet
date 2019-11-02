@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>DragNet - Style Transfer for Drag Queens</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_1_0.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+    {% block style %}{% endblock %}
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">DragNet 👩‍🎤</a>
+      <span class="navbar-text">gan I get an amen?</span>
+    </nav>
+    <div id="content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container">{% include 'description.html' %}</div>
+    </div>
+  </body>
+</html>
