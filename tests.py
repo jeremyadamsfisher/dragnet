@@ -7,7 +7,7 @@ assert test_img_fp.exists()
 
 def test():
     img = PIL.Image.open(test_img_fp)
-    translate.translate(img)
+    img = translate.translate(img)
     img.save("./test.jpg")
 
 test()
