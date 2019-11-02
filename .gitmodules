@@ -1,0 +1,3 @@
+[submodule "face.evoLVe.PyTorch"]
+	path = face.evoLVe.PyTorch
+	url = https://github.com/ZhaoJ9014/face.evoLVe.PyTorch
