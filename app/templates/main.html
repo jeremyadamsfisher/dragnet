@@ -7,13 +7,18 @@
 <div class="container jumbotron" style="padding-top:25px;padding-bottom:25px">
     <h3><i class="fa fa-camera"></i> Please input a lerk</h3>
     <hr>
-    <p>Either <button type="button" class="btn btn-primary">take a photo</button> or <button type="button" class="btn btn-primary">upload one</button></p>
+    <form action = "{{ url_for('success') }}" method = "post" enctype="multipart/form-data">  
+        <input type="file" name="file" />  
+        <input type = "submit" value="Upload" class="btn btn-primary">  
+    </form>  
+
     <hr>
     <h5>Tips</h5>
     <ul>
         <li>Look directly at the camera</li>
         <li>Keep the lighting neutral</li>
         <li>Don't use any filters (e.g. black and white)</li>
+        <li>I accept pngs and jpgs</li>
         <li>Glasses don't usually work well (but sometimes they're hilarious)</li>
     </ul>
     Although your likeness is trasmitted to my server, <i>I do not keep a record of it</i>.
