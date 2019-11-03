@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="container jumbotron" style="padding-top:25px;padding-bottom:25px">
+<div>
     <h3><i class="fa fa-camera"></i> Please input a lerk</h3>
     <hr>
     <form action = "{{ url_for('success') }}" method = "post" enctype="multipart/form-data">  
@@ -15,11 +15,10 @@
     <h5>Tips</h5>
     <ul>
         <li>Look directly at the camera</li>
-        <li>Keep the lighting neutral</li>
-        <li>Don't use any filters (e.g. black and white)</li>
+        <li>Keep the lighting neutral and don't use any filters (e.g. black and white)</li>
         <li>I accept pngs and jpgs</li>
         <li>Glasses don't usually work well (but sometimes they're hilarious)</li>
     </ul>
-    Although your likeness is trasmitted to my server, <i>I do not keep a record of it</i>.
+    <p>Although your likeness is trasmitted to my server, <i>I do not keep a record of it</i>.</p>
 </div>
 {% endblock %}
