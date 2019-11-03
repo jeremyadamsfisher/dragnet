@@ -1,3 +1,6 @@
 [submodule "face.evoLVe.PyTorch"]
 	path = face.evoLVe.PyTorch
 	url = https://github.com/ZhaoJ9014/face.evoLVe.PyTorch
+[submodule "pytorch-CycleGAN-and-pix2pix"]
+	path = pytorch-CycleGAN-and-pix2pix
+	url = https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix.git
