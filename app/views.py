@@ -1,6 +1,7 @@
 import os
 import tempfile
 import io
+import random
 import base64
 import PIL
 from flask import render_template, redirect, url_for, request
@@ -38,4 +39,15 @@ def success():
             web_output.seek(0, 0)
             web_output_b64 = base64.b64encode(web_output.getvalue()).decode('ascii')
             
-            return render_template("success.html", img=web_output_b64)
+            tags = [
+                "Tens! Tens across the board!",
+                "America, she's stunning!",
+                "Start your engines, and may the best woman win...",
+                "She already done had herses",
+            ]
+
+            return render_template(
+                "success.html",
+                img=web_output_b64,
+                tag=random.choice(tags)
+            )

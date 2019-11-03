@@ -4,13 +4,12 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-<div class="row">
-    <div class="col-1 col-md-4"></div>
-    <div style="text-align:center;" class="col-10 col-md-4">
-        <img src="data:image/jpg;base64,{{img|safe}}" style="width:100%"/>
+<div class="panel">
+    <h3>{{tag}}</h3>
+    <img src="data:image/jpg;base64,{{img|safe}}" style="width:100%"/>
+    <div style="margin-top:35px;margin-bottom:25px;">
+        <a class="btn" href="/">TAKE ANOTHER?</a>
     </div>
-    <div class="col-1 col-md-4"></div>
-</div>
+    
 </div>
 {% endblock %}

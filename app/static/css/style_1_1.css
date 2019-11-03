@@ -1,46 +1,54 @@
 body { 
-margin:0;
-font-family: 'Roboto', sans-serif;
+    margin:0;
+    font-family: 'Roboto', sans-serif;
+}
+a {
+    color: #bc4e9c;
+    text-decoration: none;
 }
 .container {
-display: grid;
-grid-template-areas:
-"header header header"
-"nav content content";
-grid-template-columns: 150px 1fr 200px;
-grid-template-rows: 55px 1fr;
-grid-gap: 0px;
-height: 100vh;
+    display: grid;
+    grid-template-areas:
+    "header header header"
+    "nav content content";
+    grid-template-columns: 150px 1fr 200px;
+    grid-template-rows: auto 1fr;
+    grid-gap: 0px;
+    height: 100vh;
 }
 
 
 header {
+    height: 65px;
+    padding-bottom: 10px;padding-top: 10px;
     grid-area: header;
     display: grid;
     grid-template-columns: 25px auto 1fr auto 25px;
-    text-shadow: 0px 3px 15px rgba(0,0,0,0.2);
-    padding: 10px;
     background: #bc4e9c; /* fallback for old browsers */
     background: -webkit-linear-gradient(to right, #bc4e9c, #f80759); /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to right, #bc4e9c, #f80759); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	text-transform: uppercase;
+    text-shadow: 0 2px black, 0 3px #777;
+    align-self: center;
 }
 .logo {
     grid-column: 2;
     align-self: center;
 }
 .logo a {
+    font-family: 'Staatliches', sans-serif; 
     color: white;
-    font-family: 'Staatliches', sans-serif;
-    font-weight: bolder;
-    font-size: 28px;
     text-decoration: none;
-    text-transform: uppercase;
+    margin: 1em 0 0.5em 0;
+	font-weight: normal;
+    font-size: 36px;
 }
 .branding {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Oswald', sans-serif; 
     color: white;
     grid-column: 4;
     align-self: center;
+    font-size: 12px;
 }
 
 nav {
@@ -79,6 +87,16 @@ main {
     grid-area: content;
     padding: 25px;
 }
+h2 {
+    margin: 1em 0 0.5em 0;
+	color: #343434;
+    font-weight: normal;
+    font-style: italic;
+	font-family: 'Staatliches', sans-serif;   
+	font-size: 36px;
+    text-transform: uppercase;
+}
+
 footer {
     grid-area: footer;
 }
@@ -102,4 +120,33 @@ footer {
     nav, aside {
         margin: 0;
     }
+}
+
+.img-box {
+    display: grid;
+    grid-template-areas:
+    "g1 img1 img2 g2";
+    grid-template-columns:  1fr auto auto 1fr;
+    grid-template-rows: auto;
+    grid-gap: 10px;
+}
+.img-box .img-left {
+    grid-area: img1;
+}
+.img-box .img-right {
+    grid-area: img2;
+}
+
+.panel {
+    background: #ebebeb;
+    padding: 15px;
+}
+
+.btn {
+    background-color: #bc4e9c;
+    color: white;
+    padding: 15px;
+}
+.btn:hover {
+    background-color: #80346a;
 }
