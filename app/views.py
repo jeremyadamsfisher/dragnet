@@ -8,15 +8,19 @@ from .translate import translate
 
 from app import app
 
-
-@app.route("/")
-def main_page():
-    return render_template("main.html")
-
-
 @app.route("/gallery")
 def gallery():
     return "not implemented yet"
+
+
+@app.route("/")
+def home():
+    return render_template("description.html")
+
+
+@app.route("/app")
+def main_page():
+    return render_template("main.html")
 
 
 @app.route('/upload', methods = ['POST'])  

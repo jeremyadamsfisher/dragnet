@@ -1,17 +1,12 @@
 {% extends "base.html" %}
 
-{% block style %}
-{% endblock %}
-
 {% block content %}
 <div>
     <h3><i class="fa fa-camera"></i> Please input a lerk</h3>
-    <hr>
     <form action = "{{ url_for('success') }}" method = "post" enctype="multipart/form-data">  
         <input type="file" name="file" />  
         <input type = "submit" value="Upload" class="btn btn-primary">  
     </form>
-    <hr>
     <h5>Tips</h5>
     <ul>
         <li>Look directly at the camera</li>

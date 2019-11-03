@@ -6,10 +6,9 @@ font-family: 'Roboto', sans-serif;
 display: grid;
 grid-template-areas:
 "header header header"
-"nav content content"
-"footer footer footer";
+"nav content content";
 grid-template-columns: 150px 1fr 200px;
-grid-template-rows: 55px 1fr auto;
+grid-template-rows: 55px 1fr;
 grid-gap: 0px;
 height: 100vh;
 }
@@ -46,8 +45,10 @@ header {
 
 nav {
     grid-area: nav;
-    background: #f7f7f7 ;
-    padding: 25px;
+    background: #f7f7f7 ; 
+    padding-top: 25px;  
+    padding-left: 25px;
+    padding-bottom: 25px;  
 }
 nav a {
     padding: 8px 8px 8px 8px;
@@ -60,12 +61,12 @@ nav a {
 nav a:hover {
     color: #1f1f1f;
 }
-footer {
-    grid-area: footer;
+.footer {
     padding: 25px;
     background: #e1e1e1;
     font-size: 12px;
     color: #969696;
+    text-align: center;
 }
 
 @media only screen and (max-width: 512px) {
