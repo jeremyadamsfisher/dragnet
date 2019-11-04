@@ -7,9 +7,10 @@ from PIL.Image import Image
 from .face_evolve import detect_faces
 from .cyclegan import translate_face_subimage
 
+
 def translate(img: Image) -> Image:
     """extract the face out from an image, get it into drag"""
-    # make smaller to keep the memory footprint low
+    # 
     x, y = img.size
     minor_axis, major_axis = sorted(img.size)
     scale_factor = 512 / major_axis
@@ -34,4 +35,8 @@ def translate(img: Image) -> Image:
         face_img_drag = translate_face_subimage(img_face)
         face_img_drag.thumbnail((size, size), PIL.Image.ANTIALIAS)
         img.paste(face_img_drag, (x1, y1))
+
+    # downscale to make the transmission back quick
+    img.thumbnail((x_scaled, y_scaled), PIL.Image.ANTIALIAS)
+
     return img
