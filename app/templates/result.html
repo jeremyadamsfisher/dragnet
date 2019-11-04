@@ -8,7 +8,7 @@
     <h2>{{tag}}</h2>
     <img src="data:image/jpg;base64,{{img|safe}}" style="width:100%"/>
     <div style="margin-top:35px;margin-bottom:25px;">
-        <a class="btn" href="/">TAKE ANOTHER?</a>
+        <a class="btn" href="{{url_for('app_page')}}}">TAKE ANOTHER?</a>
     </div>
 </div>
 {% endblock %}
