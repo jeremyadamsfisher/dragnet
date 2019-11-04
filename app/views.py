@@ -24,16 +24,19 @@ def app_page():
     return render_template("app.html")
 
 
+def fail(msg):
+    return render_template(
+        "failure.html",
+        message=msg
+    )
+
 @app.route("/result", methods = ["POST"])  
 def result():
     if request.method == "POST":  
         f = request.files["file"]
 
         if "heic" in f.filename.lower():
-            return render_template(
-                "failure.html",
-                message=f"could not translate {f.filename}"
-            )
+            fail(f"could not translate {f.filename}")
 
         with tempfile.NamedTemporaryFile("wb+") as f_temp:
             f.save(f_temp.name)
@@ -42,10 +45,7 @@ def result():
             try:
                 img = PIL.Image.open(f_temp.name)
             except OSError:
-                return render_template(
-                    "failure.html",
-                    message=f"could not process image!"
-                )
+                fail("could not process image!")
 
             img = img.convert('RGB')
 
@@ -57,7 +57,10 @@ def result():
             img.thumbnail((x_scaled, y_scaled), PIL.Image.ANTIALIAS)
 
             # # run through face.evoLVE and cycleGAN
-            img = translate(img)
+            try:
+                img = translate(img)
+            except ValueError:
+                fail("no faces found!")
 
             web_output = io.BytesIO()
             img.save(web_output, format='PNG')
