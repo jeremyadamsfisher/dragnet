@@ -2,7 +2,7 @@
 
 {% block content %}
 <div>
-    <h3><i class="fa fa-camera"></i> Input a look, and we'll give you a <i>lerk</i></h3>
+    <h3><i class="fa fa-camera"></i> Input a look and we'll give you a <i>lerk</i></h3>
     <form action = "{{ url_for('result') }}" method = "post" enctype="multipart/form-data">  
         <input type="file" name="file" />  
         <input type = "submit" value="Upload">  

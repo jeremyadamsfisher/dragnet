@@ -9,13 +9,9 @@
 <p>This is a style-transfer machine learning model. I curated a dataset of about a thousand high-quality images (each) of drag queens and selfies, used <a href="https://github.com/ZhaoJ9014/face.evoLVe.PyTorch">face.evoLVe</a> to crop out the face, and trained <a href="https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix">cycleGAN</a> to translate between them.</p>
 <p>Put simply, this wep app puts you in drag.</p>
 
-<div style="justify-self: center;">
-    <div style="display:inline-block;">
-        <img src="{{url_for('static', filename='imgs/kit.jpg')}}" width="200" height="266">
-    </div>
-    <div style="display:inline-block;">
-        <img src="{{url_for('static', filename='imgs/drag.jpg')}}" width="200" height="266">
-    </div>
+<div style="text-align: center;">
+    <img src="{{url_for('static', filename='imgs/kit.jpg')}}" width="200px" height="266">
+    <img src="{{url_for('static', filename='imgs/drag.jpg')}}" width="200" height="266">
 </div>
 
 <p>I am writing up a post about the process, which you can read at my <a href="https://jeremyafisher.com">blog</a>.</p>

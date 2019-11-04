@@ -6,7 +6,11 @@
 {% block content %}
 <div">
     <h2>{{tag}}</h2>
-    <img src="data:image/jpg;base64,{{img|safe}}" style="width:100%"/>
+    <div style="display: grid; grid-template-columns: 1fr minmax(auto, 512px) 1fr">
+        <div style="grid-column: 2;">
+            <img src="data:image/jpg;base64,{{img|safe}}" style="width:100%"/>
+        </div>
+    </div>
     <div style="margin-top:35px;margin-bottom:25px;">
         <a class="btn" href="{{url_for('app_page')}}">TAKE ANOTHER?</a>
     </div>
