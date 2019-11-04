@@ -9,6 +9,7 @@ from .translate import translate
 
 from app import app
 
+
 @app.route("/gallery")
 def gallery():
     return "not implemented yet"
@@ -25,14 +26,12 @@ def app_page():
 
 
 def fail(msg):
-    return render_template(
-        "app_failure.html",
-        message=msg
-    )
+    return render_template("app_failure.html", message=msg)
 
-@app.route("/result", methods = ["POST"])  
+
+@app.route("/result", methods=["POST"])
 def result():
-    if request.method == "POST":  
+    if request.method == "POST":
         f = request.files["file"]
 
         if "heic" in f.filename.lower():
@@ -47,7 +46,7 @@ def result():
             except OSError:
                 return fail("could not process image!")
 
-            img = img.convert('RGB')
+            img = img.convert("RGB")
 
             # # run through face.evoLVE and cycleGAN
             try:
@@ -56,10 +55,10 @@ def result():
                 return fail("no faces found!")
 
             web_output = io.BytesIO()
-            img.save(web_output, format='PNG')
+            img.save(web_output, format="PNG")
             web_output.seek(0, 0)
-            web_output_b64 = base64.b64encode(web_output.getvalue()).decode('ascii')
-            
+            web_output_b64 = base64.b64encode(web_output.getvalue()).decode("ascii")
+
             tags = [
                 "Tens! Tens across the board!",
                 "America, she's stunning!",
@@ -68,7 +67,5 @@ def result():
             ]
 
             return render_template(
-                "app_result.html",
-                img=web_output_b64,
-                tag=random.choice(tags)
+                "app_result.html", img=web_output_b64, tag=random.choice(tags)
             )

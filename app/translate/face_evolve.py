@@ -2,9 +2,11 @@
 in the context of a Flask app"""
 
 import os, sys
+
 sys.path.append(os.path.join(os.getcwd(), "face.evoLVe.PyTorch", "align"))
 import detector
 import contextlib
+
 
 @contextlib.contextmanager
 def peek(dir_path):
@@ -12,6 +14,7 @@ def peek(dir_path):
     os.chdir(dir_path)
     yield
     os.chdir(cdir)
+
 
 def detect_faces(*args, **kwargs):
     """wrapper for detector.detect_faces"""
