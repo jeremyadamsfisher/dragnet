@@ -56,7 +56,7 @@ def result():
             ]
 
             return render_template(
-                "success.html",
+                "result.html",
                 img=web_output_b64,
                 tag=random.choice(tags)
             )

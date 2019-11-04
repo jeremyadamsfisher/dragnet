@@ -122,21 +122,6 @@ footer {
     }
 }
 
-.img-box {
-    display: grid;
-    grid-template-areas:
-    "g1 img1 img2 g2";
-    grid-template-columns:  1fr auto auto 1fr;
-    grid-template-rows: auto;
-    grid-gap: 10px;
-}
-.img-box .img-left {
-    grid-area: img1;
-}
-.img-box .img-right {
-    grid-area: img2;
-}
-
 .panel {
     background: #ebebeb;
     padding: 15px;

@@ -14,7 +14,6 @@ def translate(img: Image) -> Image:
     width = x2-x1
     height = y2-y1
     size = min((width, height)) // 0.75
-
     img_face = img.crop((x1, y1, x1+size, y1+size))
     face_img_drag = translate_face_subimage(img_face)
     face_img_drag.thumbnail((size, size), PIL.Image.ANTIALIAS)
