@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set active_page = "app" %}
 
 {% block content %}
 <div>
@@ -7,13 +8,12 @@
         <input type="file" name="file" />  
         <input type = "submit" value="Upload">  
     </form>
-    <h5>Tips</h5>
+    <h3>Tips</h3>
     <ul>
         <li>Look directly at the camera</li>
         <li>Keep the lighting neutral and don't use any filters (e.g. black and white)</li>
-        <li>I accept pngs and jpgs</li>
-        <li>Glasses don't usually work well (but sometimes they're hilarious)</li>
+        <li>Keep it as a png or a jpg</li>
     </ul>
-    <p>Although your likeness is trasmitted to my server, <i>I do not keep a record of it</i>.</p>
+    <p>Btw, although your likeness is trasmitted to my server, <i>I do not keep a record of it</i>.</p>
 </div>
 {% endblock %}

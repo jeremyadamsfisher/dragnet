@@ -10,8 +10,8 @@ a {
     display: grid;
     grid-template-areas:
     "header header header"
-    "nav content content";
-    grid-template-columns: 150px 1fr 200px;
+    "nav content side";
+    grid-template-columns: 200px 1fr 200px;
     grid-template-rows: auto 1fr;
     grid-gap: 0px;
     height: 100vh;
@@ -49,23 +49,26 @@ header {
     color: white;
     grid-column: 4;
     align-self: center;
-    font-size: 12px;
+    font-size: 16px;
 }
 
 nav {
     grid-area: nav;
     background: #f7f7f7 ; 
-    padding-top: 25px;  
-    padding-left: 25px;
+    padding-top: 25px;
     padding-bottom: 25px;  
 }
 nav a {
-    padding: 8px 8px 8px 8px;
+    padding: 8px 0px 8px 25px;
     text-decoration: none;
     font-size: 16px;
     color: #818181;
     display: block;
     transition: 0.3s;
+}
+.active {
+    color: #eeeeee;
+    background-color: #9c9c9c;
 }
 nav a:hover {
     color: #1f1f1f;

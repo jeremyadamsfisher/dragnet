@@ -10,6 +10,22 @@ from .translate import translate
 from app import app
 
 
+branding_taglines = [
+    "GAN i get an amen?",
+    "drag up your machine learning",
+    "born naked and the rest is GAN",
+    "style transfer for drag queens"
+]
+
+original_render_template = render_template
+def render_template_(*args, **kwargs):
+    return original_render_template(
+        *args,
+        **kwargs,
+        branding_tagline=random.choice(branding_taglines)
+    )
+render_template = render_template_
+
 @app.route("/gallery")
 def gallery():
     return "not implemented yet"
@@ -62,8 +78,6 @@ def result():
             tags = [
                 "Tens! Tens across the board!",
                 "America, she's stunning!",
-                "Start your engines, and may the best woman win...",
-                "She already done had herses",
             ]
 
             return render_template(

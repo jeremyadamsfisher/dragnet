@@ -15,13 +15,12 @@
       <div class="container">
           <header>
           <div class="logo"><a href="#">dragnet</a></div>
-          <div class="branding">style transfer for drag queens (gan I get an amen?)</div>
+          <div class="branding">{{branding_tagline}}</div>
           </header>
-        
           <nav>
-            <a href="{{url_for('about')}}"><i class="fa fa-info-circle"></i> home</a>
-            <a href="{{url_for('app_page')}}"><i class="fa fa-camera"></i> app</a>
-            <a href="{{url_for('gallery')}}"><i class="fa fa-image"></i> gallery</a>
+            <a href="{{url_for('about')}}" {% if active_page == 'about' %}class="active"{% endif %}><i class="fa fa-info-circle"></i> home</a>
+            <a href="{{url_for('app_page')}}" {% if active_page == 'app' %}class="active"{% endif %}><i class="fa fa-camera"></i> app</a>
+            <a href="{{url_for('gallery')}}" {% if active_page == 'gallery' %}class="active"{% endif %}><i class="fa fa-image"></i> gallery</a>
           </nav>
         
           <main>
