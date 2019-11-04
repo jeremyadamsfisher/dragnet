@@ -49,13 +49,6 @@ def result():
 
             img = img.convert('RGB')
 
-            # make smaller to keep the memory footprint low
-            x, y = img.size
-            major_axis = max((x, y))
-            x_scaled = int((x / major_axis) * 512)
-            y_scaled = int((y / major_axis) * 512)
-            img.thumbnail((x_scaled, y_scaled), PIL.Image.ANTIALIAS)
-
             # # run through face.evoLVE and cycleGAN
             try:
                 img = translate(img)
