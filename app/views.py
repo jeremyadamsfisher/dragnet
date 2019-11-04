@@ -15,24 +15,33 @@ def gallery():
 
 
 @app.route("/")
-def home():
-    return render_template("description.html")
+def about():
+    return render_template("about.html")
 
 
 @app.route("/app")
-def main_page():
-    return render_template("main.html")
+def app_page():
+    return render_template("app.html")
 
 
-@app.route('/upload', methods = ['POST'])  
-def success():
-    if request.method == 'POST':  
-        f = request.files['file']
+@app.route("/result", methods = ["POST"])  
+def result():
+    if request.method == "POST":  
+        f = request.files["file"]
         with tempfile.NamedTemporaryFile("wb") as f_temp:
             f.save(f_temp.name)
             f_temp.seek(0)
 
-            img = translate(PIL.Image.open(f_temp.name))
+            # make smaller to keep the memory footprint low
+            img = PIL.Image.open(f_temp.name)
+            x, y = img.size
+            major_axis = max((x, y))
+            x_scaled = int((x / major_axis) * 512)
+            y_scaled = int((y / major_axis) * 512)
+            img.thumbnail((x_scaled, y_scaled), PIL.Image.ANTIALIAS)
+
+            # run through face.evoLVE and cycleGAN
+            img = translate(img)
 
             web_output = io.BytesIO()
             img.convert('RGBA').save(web_output, format='PNG')
