@@ -21,12 +21,12 @@ def about():
 
 @app.route("/app")
 def app_page():
-    return render_template("app.html")
+    return render_template("app_input.html")
 
 
 def fail(msg):
     return render_template(
-        "failure.html",
+        "app_failure.html",
         message=msg
     )
 
@@ -68,7 +68,7 @@ def result():
             ]
 
             return render_template(
-                "result.html",
+                "app_result.html",
                 img=web_output_b64,
                 tag=random.choice(tags)
             )
