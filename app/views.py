@@ -28,23 +28,33 @@ def app_page():
 def result():
     if request.method == "POST":  
         f = request.files["file"]
-        with tempfile.NamedTemporaryFile("wb") as f_temp:
+
+        with tempfile.NamedTemporaryFile("wb+") as f_temp:
             f.save(f_temp.name)
             f_temp.seek(0)
 
+            try:
+                img = PIL.Image.open(f_temp.name)
+            except OSError:
+                return render_template(
+                    "failure.html",
+                    message=f"could not translate {f.filename}"
+                )
+
+            img = img.convert('RGB')
+
             # make smaller to keep the memory footprint low
-            img = PIL.Image.open(f_temp.name)
             x, y = img.size
             major_axis = max((x, y))
             x_scaled = int((x / major_axis) * 512)
             y_scaled = int((y / major_axis) * 512)
             img.thumbnail((x_scaled, y_scaled), PIL.Image.ANTIALIAS)
 
-            # run through face.evoLVE and cycleGAN
-            img = translate(img)
+            # # run through face.evoLVE and cycleGAN
+            # img = translate(img)
 
             web_output = io.BytesIO()
-            img.convert('RGBA').save(web_output, format='PNG')
+            img.save(web_output, format='PNG')
             web_output.seek(0, 0)
             web_output_b64 = base64.b64encode(web_output.getvalue()).decode('ascii')
             
