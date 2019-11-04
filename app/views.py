@@ -36,7 +36,7 @@ def result():
         f = request.files["file"]
 
         if "heic" in f.filename.lower():
-            fail(f"could not translate {f.filename}")
+            return fail(f"could not translate {f.filename}")
 
         with tempfile.NamedTemporaryFile("wb+") as f_temp:
             f.save(f_temp.name)
@@ -45,7 +45,7 @@ def result():
             try:
                 img = PIL.Image.open(f_temp.name)
             except OSError:
-                fail("could not process image!")
+                return fail("could not process image!")
 
             img = img.convert('RGB')
 
@@ -53,7 +53,7 @@ def result():
             try:
                 img = translate(img)
             except ValueError:
-                fail("no faces found!")
+                return fail("no faces found!")
 
             web_output = io.BytesIO()
             img.save(web_output, format='PNG')
