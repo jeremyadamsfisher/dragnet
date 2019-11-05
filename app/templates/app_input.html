@@ -3,12 +3,12 @@
 
 {% block content %}
 <div>
-    <h3><i class="fa fa-camera"></i> Input a look and we'll give you a <i>lerk</i></h3>
+    <h2>Input a look (🧔) and we'll give you a <i>lerk</i> (👸)</h2>
     <form action = "{{ url_for('result') }}" method = "post" enctype="multipart/form-data">  
         <input type="file" name="file" />  
         <input type = "submit" value="Upload">  
     </form>
-    <h3>Tips</h3>
+    <h2>Tips</h2>
     <ul>
         <li>Look directly at the camera</li>
         <li>Keep the lighting neutral and don't use any filters (e.g. black and white)</li>
