@@ -111,3 +111,15 @@ a {
         text-align: center;
     }
 }
+
+/* gallery */
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.gallery-img {
+    margin: 10px;
+    filter: drop-shadow(0 0 7px rgba(80, 80, 80, 0.5));
+}

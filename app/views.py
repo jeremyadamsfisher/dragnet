@@ -3,6 +3,7 @@ import tempfile
 import io
 import random
 import base64
+import pathlib
 import PIL
 from flask import render_template, redirect, url_for, request
 from .translate import translate
@@ -17,12 +18,21 @@ branding_taglines = [
     "style transfer for drag queens"
 ]
 
+gallery_imgs = []
+for comparison_dir in pathlib.Path("./app/static/imgs").glob("*"):
+    if not comparison_dir.is_dir():
+        continue
+    else:
+        gallery_imgs.append((f"imgs/{comparison_dir.name}/norm.jpg", f"imgs/{comparison_dir.name}/drag.jpg"))
+
+
 original_render_template = render_template
 def render_template_(*args, **kwargs):
     return original_render_template(
         *args,
         **kwargs,
-        branding_tagline=random.choice(branding_taglines)
+        branding_tagline=random.choice(branding_taglines),
+        gallery_imgs=gallery_imgs
     )
 render_template = render_template_
 
