@@ -1,11 +1,7 @@
 {% extends "base.html" %}
-{% set active_page = "app" %}
-
-{% block style %}
-{% endblock %}
 
 {% block content %}
-<div">
+<div style="text-align: center;">
     <h2>{{tag}}</h2>
     <div style="display: grid; grid-template-columns: 1fr minmax(auto, 512px) 1fr">
         <div style="grid-column: 2;">
@@ -13,7 +9,7 @@
         </div>
     </div>
     <div style="margin-top:35px;margin-bottom:25px;">
-        <a class="btn" href="{{url_for('app_page')}}">TAKE ANOTHER?</a>
+        <a class="btn" href="{{url_for('main')}}">TAKE ANOTHER?</a>
     </div>
 </div>
 {% endblock %}

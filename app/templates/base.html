@@ -4,35 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>dragnet - style transfer for drag queens</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_1_3.css') }}">
-    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_1_4.css') }}">
     <link href="https://fonts.fontself.com/gE309jx/gilbert-color-bold-preview5.css" rel="stylesheet">
     <script>
     {% block script %}{% endblock %}
     </script>
   </head>
   <body>
-    <div class="nav-container">
-        <nav>
-            <input type="checkbox" id="nav-toggle">
-            <label for="nav-toggle" class="burger-menu">
-              <i class="fa fa-bars"></i>
-            </label>
-
-            <div class="left-menu">
-                <a href="{{url_for('about')}}" {% if active_page == 'about' %}class="active"{% endif %}>home</a>
-                <a href="{{url_for('app_page')}}" {% if active_page == 'app' %}class="active"{% endif %}>app</a>
-                <a href="{{url_for('gallery')}}" {% if active_page == 'gallery' %}class="active"{% endif %}>gallery</a>
-            </div>
-
-            <a href="#" class="logo">DRAGNET</a>
-
-            <div class="branding">{{branding_tagline}}</div>
-        </nav>
-    </div>
-    <div class="content-container">
+    <div class="container">
+        <div class="nav-container">
+          <div class="nav">
+              <a href="#" class="logo">DRAGNET</a>
+          </div>
+        </div>
         <div class="left"></div>
-        <div class="main">{% block content %}{% endblock %}</div>
+        <div class="main">
+          {% block content %}
+          {% endblock %}
+        </div>
         <div class="right"></div>
     </div>
     </div>

@@ -26,19 +26,9 @@ def render_template_(*args, **kwargs):
     )
 render_template = render_template_
 
-@app.route("/gallery")
-def gallery():
-    return "not implemented yet"
-
-
 @app.route("/")
-def about():
-    return render_template("about.html")
-
-
-@app.route("/app")
-def app_page():
-    return render_template("app_input.html")
+def main():
+    return render_template("main.html")
 
 
 def fail(msg):
