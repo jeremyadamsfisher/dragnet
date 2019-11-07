@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  deploy:
+    steps:
+      - checkout
+      - run: make superdeploy
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - deploy
