@@ -6,6 +6,7 @@ import os, sys
 sys.path.append(os.path.join(os.getcwd(), "face.evoLVe.PyTorch", "align"))
 import detector
 import contextlib
+import torch
 
 
 @contextlib.contextmanager
@@ -18,5 +19,5 @@ def peek(dir_path):
 
 def detect_faces(*args, **kwargs):
     """wrapper for detector.detect_faces"""
-    with peek("./face.evoLVe.PyTorch/align"):
+    with peek("./face.evoLVe.PyTorch/align"), torch.no_grad():
         return detector.detect_faces(*args, **kwargs)
