@@ -5,12 +5,14 @@ $(document).ready(function(){
     $("form#files").submit(function(e) {
         e.preventDefault();
 
-        var formField = document.getElementById("files");
-        formField.style.display = "none";
-        var progress = document.getElementById("uploadProgress");
-        formField.style.display = "inline-block";
+        let formField = document.getElementById("files");
+        let progress = document.getElementById("uploadProgress");
+        setTimeout(function(){
+            formField.style.display = "none";
+            progress.style.display = "inline-block";
+        }, 1000)
 
-        var formData = new FormData(this);
+        let formData = new FormData(this);
         $.ajax({
             url: "{{ url_for('enqueue') }}",
             type: 'POST',
@@ -35,8 +37,13 @@ $(document).ready(function(){
 tldr; input a look (🧔) and we'll give you a <i>lerk</i> (👸)
 <br>
 <div class="fileform">
-    <h2 id="uploadProgress" style="display:none;">still shantaying...</h2>
-    <form id="files" method="post" enctype="multipart/form-data">
+    <div id="uploadProgress" style="display:none;">
+        <h2>uploading lerk...</h2>
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div id="loader" style="display: inline-block"></div>
+        </div>
+    </div>
+    <form id="files" method="post" enctype="multipart/form-data"  style="display:inline-block;">
         <input type="file" name="file"/>
         <button>Submit</button>
     </form>
