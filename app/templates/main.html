@@ -1,6 +1,23 @@
 {% extends "base.html" %}
 
-{% block script%}
+{% block scripthead%}
+$(document).ready(function(){
+    $("form#files").submit(function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: "{{ url_for('enqueue') }}",
+            type: 'POST',
+            data: formData,
+            success: function (data) {
+                window.location.replace(data.result_page);
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+}); 
 {% endblock %}
 
 {% block content %}
@@ -10,10 +27,11 @@
 tldr; input a look (🧔) and we'll give you a <i>lerk</i> (👸)
 <br>
 
-<form id="photo-upload" action="{{ url_for('result') }}" method="post" enctype="multipart/form-data">  
-    <input type="file" name="file"/>  
-    <input type = "submit" value="Upload">
+<form id="files" method="post" enctype="multipart/form-data">
+    <input type="file" name="file"/>
+    <button>Submit</button>
 </form>
+
 <b>Tips:</b>
 <ul>
     <li>Look directly at the camera</li>

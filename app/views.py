@@ -8,7 +8,7 @@ import PIL
 
 from pathlib import Path
 from google.cloud import storage, tasks_v2
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, make_response, jsonify
 
 from .translate import translate
 from .constants import BRANDING_TAGLINES, TAGS
@@ -52,10 +52,10 @@ def fail(msg):
     )
 
 
-@app.route("/result", methods=["POST"])
-def result():
-    """view method: result page -- upload the user profile image, enqueue
-    to cloud tasks and redirect user to the apropriate page"""
+@app.route("/enqueue", methods=["POST"])
+def enqueue():
+    """view method: upload the user profile image, enqueue
+    to cloud tasks send back redirect information"""
     if request.method == "POST":
         profile_img = request.files["file"]
         if "heic" in profile_img.filename.lower():
@@ -70,11 +70,16 @@ def result():
                 }
             }
             client.create_task(parent, task)
-            return render_template(
-                "app_result.html",
-                img_id=img_id,
-                tag=random.choice(TAGS)
-            )
+            return make_response(jsonify({"result_page": f"/result/{img_id}"}), 200)
+
+
+@app.route('/result/<img_id>')
+def result(img_id: str):
+    return render_template(
+        "app_result.html",
+        img_id=img_id,
+        tag=random.choice(TAGS)
+    )
 
 
 @app.route('/predict/<img_id>', methods=['POST'])
