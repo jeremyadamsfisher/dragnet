@@ -2,8 +2,56 @@
 
 {% block script%}
 $(document).ready(function(){
+    /* https://stackoverflow.com/questions/10333971/html5-pre-resize-images-before-uploading */
+
     $("form#files").submit(function(e) {
         e.preventDefault();
+
+
+        var filesToUpload = document.getElementById("fileChooser").files;
+        var file = filesToUpload[0];
+
+        console.log(JSON.stringify(file));
+
+        var canvas = document.createElement("canvas");
+
+        var img = document.createElement("img");
+        var reader = new FileReader();  
+        reader.onload = function(e) {img.src = e.target.result}
+        reader.readAsDataURL(file);
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        var MAX_WIDTH = 800;
+        var MAX_HEIGHT = 600;
+        var width = img.width;
+        var height = img.height;
+
+        if (width > height) {
+        if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+        }
+        } else {
+        if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+        }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        var dataurl = canvas.toDataURL("image/png");
+
+
+
+
+
+
+
 
         let formField = document.getElementById("files");
         let progress = document.getElementById("uploadProgress");
@@ -44,7 +92,7 @@ tldr; input a look (🧔) and we'll give you a <i>lerk</i> (👸)
         </div>
     </div>
     <form id="files" method="post" enctype="multipart/form-data"  style="display:inline-block;">
-        <input type="file" name="file"/>
+        <input type="file" name="file" id="fileChooser"/>
         <button>Submit</button>
     </form>
 </div>
