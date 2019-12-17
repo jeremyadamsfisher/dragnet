@@ -14,34 +14,34 @@
 {% endblock %}
 
 {% block script %}
-<script>
-'use strict';
-const uri = "https://storage.googleapis.com/dragnet_imgs/{{img_id}}";
-const tagline = "{{tag}}";
-function showDrag() {
-  document.getElementById("imgTarget").src = uri;
-  document.getElementById("imgTarget").style.display = "inline-block";
-  document.getElementById("subtitle").innerHTML = tagline;
-  document.getElementById("loader").style.display = "none";
-}
-function showError() {
-  document.getElementById("subtitle").innerHTML = "error! (please try again.)";
-  document.getElementById("loader").style.display = "none";
-}
-function pingGcp(n){
-  if (n === 0) {
-    showError();
-  } else {
-    let http = new XMLHttpRequest();
-    http.open('HEAD', "https://cors-anywhere.herokuapp.com/" + uri, false);
-    http.send();
-    if (http.status === 404) {
-      setTimeout( function() { pingGcp(n-1); }, 5000);
+$(document).ready(function(){
+  'use strict';
+  const uri = "https://storage.googleapis.com/dragnet_imgs/{{img_id}}";
+  const tagline = "{{tag}}";
+  function showDrag() {
+    document.getElementById("imgTarget").src = uri;
+    document.getElementById("imgTarget").style.display = "inline-block";
+    document.getElementById("subtitle").innerHTML = tagline;
+    document.getElementById("loader").style.display = "none";
+  }
+  function showError() {
+    document.getElementById("subtitle").innerHTML = "error! (please try again.)";
+    document.getElementById("loader").style.display = "none";
+  }
+  function pingGcp(n){
+    if (n === 0) {
+      showError();
     } else {
-      showDrag();
+      let http = new XMLHttpRequest();
+      http.open('HEAD', "https://cors-anywhere.herokuapp.com/" + uri, false);
+      http.send();
+      if (http.status === 404) {
+        setTimeout( function() { pingGcp(n-1); }, 5000);
+      } else {
+        showDrag();
+      }
     }
   }
-}
-pingGcp(50);
-</script>
+  pingGcp(50);
+}); 
 {% endblock %}
