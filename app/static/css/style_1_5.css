@@ -97,14 +97,14 @@ a {
 
 /* forms */
 
-#files {
+.fileform {
     padding: 20px;
     margin: 20px auto;
     text-align: center;
     background: whitesmoke;
 }
 @media only screen and (max-width: 1025px) {
-    #files {
+    .fileform {
         padding: 0px;
         padding-top: 10px;
         padding-bottom: 10px;

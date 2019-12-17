@@ -4,13 +4,21 @@
 $(document).ready(function(){
     $("form#files").submit(function(e) {
         e.preventDefault();
+
+        var formField = document.getElementById("files");
+        formField.style.display = "none";
+        var progress = document.getElementById("uploadProgress");
+        formField.style.display = "inline-block";
+
         var formData = new FormData(this);
         $.ajax({
             url: "{{ url_for('enqueue') }}",
             type: 'POST',
             data: formData,
             success: function (data) {
-                window.location.replace(data.result_page);
+                setTimeout(function(){
+                    window.location.replace(data.result_page);
+                }, 5000);
             },
             cache: false,
             contentType: false,
@@ -26,12 +34,13 @@ $(document).ready(function(){
 <h1>{{branding_tagline}}</h1>
 tldr; input a look (🧔) and we'll give you a <i>lerk</i> (👸)
 <br>
-
-<form id="files" method="post" enctype="multipart/form-data">
-    <input type="file" name="file"/>
-    <button>Submit</button>
-</form>
-
+<div class="fileform">
+    <h2 id="uploadProgress" style="display:none;">still shantaying...</h2>
+    <form id="files" method="post" enctype="multipart/form-data">
+        <input type="file" name="file"/>
+        <button>Submit</button>
+    </form>
+</div>
 <b>Tips:</b>
 <ul>
     <li>Look directly at the camera</li>

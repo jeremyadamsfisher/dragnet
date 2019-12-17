@@ -19,8 +19,9 @@ $(document).ready(function(){
   const uri = "https://storage.googleapis.com/dragnet_imgs/{{img_id}}";
   const tagline = "{{tag}}";
   function showDrag() {
-    document.getElementById("imgTarget").src = uri;
-    document.getElementById("imgTarget").style.display = "inline-block";
+    let imgTarget = document.getElementById("imgTarget");
+    imgTarget.src = uri;
+    imgTarget.style.display = "inline-block";
     document.getElementById("subtitle").innerHTML = tagline;
     document.getElementById("loader").style.display = "none";
   }
