@@ -14,10 +14,14 @@ from .translate import translate
 from .constants import BRANDING_TAGLINES, TAGS
 from app import app
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.abspath("./secrets.json")
+
 storage_client = storage.Client()
 client = tasks_v2.CloudTasksClient()
-parent = client.queue_path("dragnet", "us-east1", "dragnet-queue")  # todo: put this in an .env
+parent = client.queue_path(
+    os.environ["GCLOUD_DRAG_BUCKET"],
+    os.environ["GCLOUD_REGION"],
+    os.environ["GCLOUD_QUEUE_NAME"],
+)
 
 GALLERY_IMGS = []
 for comparison_dir in pathlib.Path("./app/static/imgs").glob("*"):
@@ -63,7 +67,7 @@ def enqueue():
         if "heic" in profile_img.filename.lower():
             return fail(f"could not translate {profile_img.filename}")
         else:
-            img_id = f"{uuid.uuid4()}.png"
+            img_id = str(uuid.uuid4())
             task = {
                 "app_engine_http_request": {
                     "http_method": "POST",
@@ -75,8 +79,9 @@ def enqueue():
             return make_response(jsonify({"result_page": f"/result/{img_id}"}), 200)
 
 
-@app.route('/result/<img_id>')
+@app.route("/result/<img_id>")
 def result(img_id: str):
+    """render the result"""
     return render_template(
         "app_result.html",
         img_id=img_id,
@@ -86,12 +91,13 @@ def result(img_id: str):
 
 @app.route("/checkprogress/<img_id>")
 def checkprogress(img_id: str):
-    url = f"https://storage.googleapis.com/dragnet_imgs/{img_id}"
+    """ping cloud tasks to see if the image is cooked"""
+    url = f"https://storage.googleapis.com/{os.environ['GCLOUD_DRAG_BUCKET']}/{img_id}"
     resp = {"status": "working"}
     return make_response(jsonify(resp), 200)
 
 
-@app.route('/predict/<img_id>', methods=['POST'])
+@app.route("/predict/<img_id>", methods=["POST"])
 def predict(img_id: str):
     """predict what someone looks like in drag and upload it to gcp
     

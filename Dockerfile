@@ -9,8 +9,7 @@ ADD requirements.txt ./requirements.txt
 RUN pip3 install -r  ./requirements.txt \
                && rm ./requirements.txt
 
-ENV GCLOUD_DRAG_BUCKET "dragnet_imgs"
-ADD secrets.json .
+ADD secrets.json secrets.env ./
 
 ADD . /app
 CMD gunicorn -b :$PORT main:app
