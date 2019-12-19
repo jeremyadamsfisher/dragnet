@@ -84,6 +84,13 @@ def result(img_id: str):
     )
 
 
+@app.route("/checkprogress/<img_id>")
+def checkprogress(img_id: str):
+    url = f"https://storage.googleapis.com/dragnet_imgs/{img_id}"
+    resp = {"status": "working"}
+    return make_response(jsonify(resp), 200)
+
+
 @app.route('/predict/<img_id>', methods=['POST'])
 def predict(img_id: str):
     """predict what someone looks like in drag and upload it to gcp

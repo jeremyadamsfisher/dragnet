@@ -1,50 +1,19 @@
 {% extends "base.html" %}
 
+{% block script %}
+<script type="text/javascript" src="{{url_for('static', filename='js/checkprogress.js')}}"></script>
+{% endblock %}
+
 {% block content %}
 <div style="text-align: center;">
   <h2 id="subtitle">still shantaying...</h2>
   <div style="text-align: center; margin-top: 55px;">
     <div id="loader" style="display: inline-block"></div>
   </div>
-  <img id="imgTarget" src="" style="width:512px;display=none"/>
+  <img id="imgTarget" src="" style="width:512px;display:none"/>
   <div style="margin-top:35px;margin-bottom:25px;">
     <a class="btn" href="{{url_for('main')}}">TAKE ANOTHER?</a>
   </div>
 </div>
-{% endblock %}
-
-{% block script %}
-<script>
-$(document).ready(function(){
-  'use strict';
-  const uri = "https://storage.googleapis.com/dragnet_imgs/{{img_id}}";
-  const tagline = "{{tag}}";
-  function showDrag() {
-    let imgTarget = document.getElementById("imgTarget");
-    imgTarget.src = uri;
-    imgTarget.style.display = "inline-block";
-    document.getElementById("subtitle").innerHTML = tagline;
-    document.getElementById("loader").style.display = "none";
-  }
-  function showError() {
-    document.getElementById("subtitle").innerHTML = "error! (please try again.)";
-    document.getElementById("loader").style.display = "none";
-  }
-  function pingGcp(n){
-    if (n === 0) {
-      showError();
-    } else {
-      let http = new XMLHttpRequest();
-      http.open('HEAD', "https://cors-anywhere.herokuapp.com/" + uri, false);
-      http.send();
-      if (http.status === 404) {
-        setTimeout( function() { pingGcp(n-1); }, 5000);
-      } else {
-        showDrag();
-      }
-    }
-  }
-  pingGcp(50);
-}); 
-</script>
+<span id="metadata" style="display: none;" tag="{{url_for('checkprogress'}}/{{tag}}"></span>
 {% endblock %}
