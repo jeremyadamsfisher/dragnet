@@ -14,6 +14,7 @@
 {% endblock %}
 
 {% block script %}
+<script>
 $(document).ready(function(){
   'use strict';
   const uri = "https://storage.googleapis.com/dragnet_imgs/{{img_id}}";
@@ -45,4 +46,5 @@ $(document).ready(function(){
   }
   pingGcp(50);
 }); 
+</script>
 {% endblock %}

@@ -57,6 +57,8 @@ def enqueue():
     """view method: upload the user profile image, enqueue
     to cloud tasks send back redirect information"""
     if request.method == "POST":
+        profile_img = request.args.get("img")
+        raise Exception(request.args)
         profile_img = request.files["file"]
         if "heic" in profile_img.filename.lower():
             return fail(f"could not translate {profile_img.filename}")
