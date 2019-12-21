@@ -9,7 +9,7 @@ ADD requirements.txt ./requirements.txt
 RUN pip3 install -r  ./requirements.txt \
                && rm ./requirements.txt
 
-ADD secrets.json secrets.env ./
+ADD secrets.json .env ./
 
 ADD . /app
 CMD gunicorn -b :$PORT main:app
