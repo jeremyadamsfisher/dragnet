@@ -1,35 +1,40 @@
 'use strict';
 $(document).ready(function(){
-    const imgId = document.getElementById("imgId").getAttribute("imgId");
-    const tagLine = document.getElementById("tagLine").getAttribute("tagLine");
-
-    const uri = "https://storage.googleapis.com/dragnet_imgs/" + imgId;
+    const imgId = document.getElementById("imgId").getAttribute("img_id");
+    const tagLine = document.getElementById("tagLine").getAttribute("tag_line");
+    const url = "https://storage.googleapis.com/dragnet_imgs/" + imgId;
+    
     function showDrag() {
         let imgTarget = document.getElementById("imgTarget");
-        imgTarget.src = uri;
+        imgTarget.src = "https://cors-anywhere.herokuapp.com/" + url;
         imgTarget.style.display = "inline-block";
         document.getElementById("subtitle").innerHTML = tagLine;
-        document.getElementById("loader").style.display = "none";
+        hideLoader();
     }
     function showError() {
-        document.getElementById("subtitle").innerHTML = "error! (please try again.)";
+        document.getElementById("subtitle").innerHTML = "error! (please try again later.)";
+        hideLoader();
+    }
+    function hideLoader() {
         document.getElementById("loader").style.display = "none";
     }
-    function pingGcp(n){
+    function pingDone(n) {
         if (n === 0) {
             showError();
         } else {
-            let http = new XMLHttpRequest();
-            http.open("HEAD", "https://cors-anywhere.herokuapp.com/" + uri, false);
-            http.onload = (e) => {
-                if (http.status === 404) {
-                    setTimeout( function() { pingGcp(n-1); }, 5000);
-                } else {
-                    showDrag();
-                }
-            }
-            http.send();
+            $.ajax({
+                url: "/checkprogress/" + imgId,
+                type: "GET",
+                success: function (response) {
+                    console.log(response);
+                    if (response.drag_status === "loading") {
+                        setTimeout( function() { pingDone(n-1); }, 5000);
+                    } else if (response.drag_status === "done") {
+                        showDrag();
+                    }
+                },
+            });
         }
     }
-    pingGcp(5);
+    pingDone(5);
 }); 
