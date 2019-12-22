@@ -10,15 +10,6 @@ from .cyclegan import translate_face_subimage
 
 def translate(img: Image) -> Image:
     """extract the face out from an image, get it into drag"""
-    img = img.copy()
-
-    x, y = img.size
-    minor_axis, major_axis = sorted(img.size)
-    scale_factor = 512 / major_axis
-    x_scaled = int(x * scale_factor)
-    y_scaled = int(y * scale_factor)
-    img.thumbnail((x_scaled, y_scaled), PIL.Image.ANTIALIAS)
-
     bounding_boxes, _ = detect_faces(img)
 
     if len(bounding_boxes) == 0:

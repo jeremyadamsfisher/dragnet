@@ -10,6 +10,6 @@ RUN pip3 install -r  ./requirements.txt \
                && rm ./requirements.txt
 
 ADD secrets.json .env ./
-
 ADD . /app
-CMD gunicorn -b :$PORT main:app
+CMD export GOOGLE_APPLICATION_CREDENTIALS="./secrets.json" \
+    && gunicorn -b :$PORT main:app

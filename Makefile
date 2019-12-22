@@ -2,8 +2,8 @@ PY=~/miniconda3/envs/dragnet/bin/python
 
 serve:
 	export DRAGNET_DEBUG=1 \
-		&& export GCLOUD_DRAG_BUCKET=dragnet_imgs \
-		&& $(PY) main.py
+	&& export GOOGLE_APPLICATION_CREDENTIALS="$(PWD)/secrets.json" \
+	&& $(PY) main.py
 
 test:
 	$(PY) tests.py

@@ -5,6 +5,7 @@ import random
 import pathlib
 import uuid
 import PIL
+import base64
 
 from pathlib import Path
 from google.cloud import storage, tasks_v2
@@ -61,22 +62,26 @@ def enqueue():
     """view method: upload the user profile image, enqueue
     to cloud tasks send back redirect information"""
     if request.method == "POST":
-        profile_img = request.args.get("img")
-        raise Exception(request.args)
-        profile_img = request.files["file"]
-        if "heic" in profile_img.filename.lower():
-            return fail(f"could not translate {profile_img.filename}")
-        else:
-            img_id = str(uuid.uuid4())
-            task = {
-                "app_engine_http_request": {
-                    "http_method": "POST",
-                    "relative_uri": f"/predict/{img_id}",
-                    "body": profile_img.read(),
-                }
-            }
-            client.create_task(parent, task)
-            return make_response(jsonify({"result_page": f"/result/{img_id}"}), 200)
+        payload = request.get_data()
+        try:
+            if not payload:
+                raise FileNotFoundError
+            else:
+                data_b64 = payload[len("data:image/jpeg;base64,"):]
+                data = base64.b64decode(data_b64)
+                img_id = str(uuid.uuid4())
+                client.create_task(parent, {
+                    "app_engine_http_request": {
+                        "http_method": "POST",
+                        "relative_uri": f"/predict/{img_id}",
+                        "body": data,
+                    }
+                })
+                return make_response(jsonify({"result": "success",
+                                              "result_page": f"/result/{img_id}"}), 200)
+        except FileNotFoundError:
+            return make_response(jsonify({"result": "failure",
+                                          "result_page": None}), 200)
 
 
 @app.route("/result/<img_id>")
@@ -104,12 +109,16 @@ def predict(img_id: str):
     Arguments:
         img_id: how we will save the file to gcp, front-end also knows about
     """
+    if request.method == "POST":
+        payload = request.get_data()
+        predict_(payload, img_id)
+
+
+def predict_(payload: bytes, img_id:str):
     with tempfile.NamedTemporaryFile() as tf:
-        if request.method == "POST":
-            payload = request.get_data()
-            img = PIL.Image.open(io.BytesIO(payload)).convert("RGB")
-            img = translate(img)
-            img.save(tf.name, format="PNG")
-            bucket = storage_client.get_bucket(os.environ["GCLOUD_DRAG_BUCKET"])
-            blob = bucket.blob(img_id)
-            blob.upload_from_filename(tf.name)
+        img = PIL.Image.open(io.BytesIO(payload)).convert("RGB")
+        img = translate(img)
+        img.save(tf.name, format="PNG")
+        bucket = storage_client.get_bucket(os.environ["GCLOUD_DRAG_BUCKET"])
+        blob = bucket.blob(img_id)
+        blob.upload_from_filename(tf.name)

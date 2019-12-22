@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% block meta %}
+<!-- <meta id="img_uri" imgUri="{{url_for('checkprogress', img_id=img_id)}}"> -->
+<meta id="imgId" imgId="{{img_id}}">
+<meta id="tagLine" tagLine="{{tag}}">
+{% endblock %}
+
 {% block script %}
 <script type="text/javascript" src="{{url_for('static', filename='js/checkprogress.js')}}"></script>
 {% endblock %}
@@ -15,5 +21,4 @@
     <a class="btn" href="{{url_for('main')}}">TAKE ANOTHER?</a>
   </div>
 </div>
-<span id="metadata" style="display: none;" tag="{{url_for('checkprogress'}}/{{tag}}"></span>
 {% endblock %}

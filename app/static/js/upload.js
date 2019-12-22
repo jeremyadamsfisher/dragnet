@@ -1,66 +1,63 @@
 $(document).ready(function(){
     /* https://stackoverflow.com/questions/10333971/html5-pre-resize-images-before-uploading */
 
+    const formField = document.getElementById("files");
+    const progress = document.getElementById("uploadProgress");
+    function showUploader() {
+        formField.style.display = "none";
+        progress.style.display = "inline-block";
+    }
+
     $("form#files").submit(function(e) {
         e.preventDefault();
+        showUploader();
 
-        var filesToUpload = document.getElementById("fileChooser").files;
-        var file = filesToUpload[0];
+        const img = document.createElement("img");
+        const canvas = document.createElement("canvas");
+        const reader = new FileReader();  
+        reader.onload = function(e) {
+            img.src = e.target.result;
 
-        var canvas = document.createElement("canvas");
+            canvas.getContext("2d").drawImage(img, 0, 0);
 
-        var img = document.createElement("img");
-        var reader = new FileReader();  
-        reader.onload = function(e) {img.src = e.target.result}
-        reader.readAsDataURL(file);
-
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-        var MAX_WIDTH = 800;
-        var MAX_HEIGHT = 600;
-        var width = img.width;
-        var height = img.height;
-        if (width > height) {
-            if (width > MAX_WIDTH) {
-                height *= MAX_WIDTH / width;
-                width = MAX_WIDTH;
+            const maxSize = 512;
+            let width = img.width;
+            let height = img.height;
+            if (maxSize <= width || maxSize <= height) {
+                if (width > height) {
+                    if (width > maxSize) {
+                        height *= maxSize / width;
+                        width = maxSize;
+                    }
+                } else {
+                    if (height > maxSize) {
+                        width *= maxSize / height;
+                        height = maxSize;
+                    }
+                }
             }
-        } else {
-            if (height > MAX_HEIGHT) {
-                width *= MAX_HEIGHT / height;
-                height = MAX_HEIGHT;
-            }
+            canvas.width = width;
+            canvas.height = height;
+
+            canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+
+            $.ajax({
+                url: "/enqueue",
+                type: "POST",
+                data : canvas.toDataURL("image/jpeg"),
+                success: function (response) {
+                    setTimeout(function(){
+                        if (response.result === "failure") {
+                            alert("Error with uploaded image!");
+                            window.location.replace("/");
+                        } else if (response.result === "success") {
+                            window.location.replace(response.result_page);
+                        }
+                    }, 1000);
+                },
+            });
         }
-        canvas.width = width;
-        canvas.height = height;
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, width, height);
-
-        var dataurl = canvas.toDataURL("image/png");
-        /*document.getElementById("fileChooser").files[0]= dataurl;*/
-
-        /* update interface */
-        var formField = document.getElementById("files");
-        var progress = document.getElementById("uploadProgress");
-        setTimeout(function(){
-            formField.style.display = "none";
-            progress.style.display = "inline-block";
-        }, 1000)
-
-        /* var formData = new FormData(this); */
-
-        $.ajax({
-            url: "/enqueue",
-            type: 'POST',
-            img : dataurl,
-            success: function (data) {
-                setTimeout(function(){
-                    window.location.replace(data.result_page);
-                }, 5000);
-            },
-            cache: false,
-            contentType: false,
-            processData: false
-        });
+        const filesToUpload = document.getElementById("fileChooser").files;
+        reader.readAsDataURL(filesToUpload[0]);
     });
 }); 
