@@ -6,4 +6,4 @@ app = Flask(__name__, instance_relative_config=True)
 CORS(app)
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 app.config.from_object("config")
-from app import views
+from app import views, backend
