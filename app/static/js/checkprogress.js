@@ -1,40 +1,44 @@
-'use strict';
-$(document).ready(function(){
-    const imgId = document.getElementById("imgId").getAttribute("img_id");
-    const tagLine = document.getElementById("tagLine").getAttribute("tag_line");
-    const url = "https://storage.googleapis.com/dragnet_imgs/" + imgId;
-    
-    function showDrag() {
-        let imgTarget = document.getElementById("imgTarget");
-        imgTarget.src = "https://cors-anywhere.herokuapp.com/" + url;
-        imgTarget.style.display = "inline-block";
-        document.getElementById("subtitle").innerHTML = tagLine;
-        hideLoader();
+"use strict";
+
+function showDrag(imgUrl) {
+    // hide loader
+    let loaderView = document.getElementById("loader");
+    loaderView.style.display = "none";
+
+    // update tag line
+    let tagLine = document.getElementById("tagLine").getAttribute("tagLine");
+    document.getElementById("subtitle").innerHTML = tagLine;
+
+    // show drag image
+    let imgTarget = document.getElementById("imgTarget");
+    imgTarget.src = imgUrl;
+    imgTarget.style.display = "inline-block";
+};
+
+function showError(err) {
+    // make this better 
+    alert(`Error: ${err}`);
+};
+
+function pingBackendForImage(imgId, n) {
+    if (n === 0) {
+        showError("time out!");
+    } else {
+        fetch(`/checkprogress/${imgId}`)
+            .then(response => response.json())
+            .then(j => {
+                if (j.status === "loading") {
+                    setTimeout(() => pingBackendForImage(imgId, n-1), 1000);
+                } else if (j.status === "done") {
+                    showDrag(j.url);
+                }
+            })
+            .catch(err => showError(err));
     }
-    function showError() {
-        document.getElementById("subtitle").innerHTML = "error! (please try again later.)";
-        hideLoader();
-    }
-    function hideLoader() {
-        document.getElementById("loader").style.display = "none";
-    }
-    function pingDone(n) {
-        if (n === 0) {
-            showError();
-        } else {
-            $.ajax({
-                url: "/checkprogress/" + imgId,
-                type: "GET",
-                success: function (response) {
-                    console.log(response);
-                    if (response.drag_status === "loading") {
-                        setTimeout( function() { pingDone(n-1); }, 5000);
-                    } else if (response.drag_status === "done") {
-                        showDrag();
-                    }
-                },
-            });
-        }
-    }
-    pingDone(5);
-}); 
+};
+
+function init() {
+    let elements = location.href.split("/");
+    let imgId = elements[elements.length - 1];
+    pingBackendForImage(imgId, 5);
+};

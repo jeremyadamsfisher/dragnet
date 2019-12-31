@@ -8,17 +8,20 @@ import PIL
 import base64
 import requests
 
+from . import utils
+
 from os import path
 from pathlib import Path
-from google.cloud import storage, tasks_v2
-from flask import render_template, redirect, url_for, request, make_response, jsonify
+from werkzeug import secure_filename
+from google.cloud import tasks_v2
+from flask import (render_template, redirect, url_for, request, make_response, jsonify, abort)
 
+from .storage import download, upload
 from .translate import translate
 from .constants import BRANDING_TAGLINES, TAGS
 from app import app
 
 
-storage_client = storage.Client()
 client = tasks_v2.CloudTasksClient()
 parent = client.queue_path(
     os.environ["GCLOUD_PROJECT_NAME"],
@@ -46,48 +49,33 @@ def main():
     )
 
 
-def fail(msg):
-    """view method: convenience failure state -- display
-    failure to user
-    
-    Arguments:
-        msg: message to display
-    """
-    return render_template(
-        "app_failure.html",
-        message=msg
-    )
-
-
 @app.route("/enqueue", methods=["POST"])
 def enqueue():
     """view method: upload the user profile image, enqueue
     to cloud tasks send back redirect information"""
     if request.method == "POST":
         payload = request.get_data()
-        try:
-            if not payload:
-                raise FileNotFoundError
-            else:
-                img_id = str(uuid.uuid4())
-                data_b64 = payload[len("data:image/jpeg;base64,"):]
-                data = base64.b64decode(data_b64)
-                with tempfile.TemporaryDirectory() as t_dir:
-                    fp = path.join(t_dir, "in.jpg")
-                    with open(fp, "wb") as f:
-                        f.write(data)
-                    upload(fp, img_id, os.environ["GCLOUD_INTERMEDIARY_BUCKET"])
-                client.create_task(parent, {
-                    "app_engine_http_request": {
-                        "http_method": "GET",
-                        "relative_uri": f"/predict/{img_id}",
-                    }
-                })
-                return make_response(jsonify({"result": "success",
-                                              "result_page": f"/result/{img_id}"}), 200)
-        except FileNotFoundError:
-            return make_response(jsonify({"result": "failure",
-                                          "result_page": None}), 200)
+        if not payload:
+            abort(400)  # bad request
+        else:
+            img_id = str(uuid.uuid4())
+            with tempfile.TemporaryDirectory() as t_dir:
+                fp = path.join(t_dir, "in.jpg")
+                try:
+                    img = PIL.Image.open(io.BytesIO(payload)).convert("RGB")
+                    resized_img = utils.resize_image(img)
+                except OSError:
+                    abort(415)
+                resized_img.save(fp, "JPEG")
+                upload(fp, img_id, os.environ["GCLOUD_INTERMEDIARY_BUCKET"])
+            client.create_task(parent, {
+                "app_engine_http_request": {
+                    "http_method": "GET",
+                    "relative_uri": url_for("predict", img_id=img_id),
+                }
+            })
+            j = {"result": url_for("result", img_id=img_id)}
+            return make_response(jsonify(j), 200)
 
 
 @app.route("/result/<img_id>")
@@ -95,7 +83,6 @@ def result(img_id: str):
     """render the result"""
     return render_template(
         "app_result.html",
-        img_id=img_id,
         tag=random.choice(TAGS)
     )
 
@@ -104,9 +91,12 @@ def result(img_id: str):
 def checkprogress(img_id: str):
     """ping cloud tasks to see if the image is cooked"""
     drag_bucket = os.environ["GCLOUD_DRAG_BUCKET"]
-    r = requests.get(f"https://storage.googleapis.com/{drag_bucket}/{img_id}")
-    resp = {"drag_status": "loading"} if r.status_code == 404 else {"drag_status": "done"}
-    return make_response(jsonify(resp))
+    url = f"https://storage.googleapis.com/{drag_bucket}/{img_id}"
+    r = requests.get(url)
+    if r.status_code == 404:
+        return make_response(jsonify({"status": "loading"}))
+    else:
+        return make_response(jsonify({"status": "done", "url": url}))
 
 
 @app.route("/predict/<img_id>")
@@ -124,14 +114,3 @@ def predict(img_id: str):
         img = translate(img)
         img.save(fp_out, format="JPEG")
         upload(fp_out, img_id, os.environ["GCLOUD_DRAG_BUCKET"])
-
-
-def upload(fp, f_name, bucket):
-    bucket = storage_client.get_bucket(bucket)
-    blob = bucket.blob(f_name)
-    blob.upload_from_filename(fp)
-
-def download(fp, f_name, bucket):
-    bucket = storage_client.bucket(os.environ["GCLOUD_INTERMEDIARY_BUCKET"])
-    blob = bucket.blob(f_name)
-    blob.download_to_filename(fp)
