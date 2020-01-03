@@ -2,7 +2,7 @@ import random
 from pathlib import Path
 from flask import render_template, Blueprint
 
-from .constants import BRANDING_TAGLINES, TAGS
+from .constants import BRANDING_TAGLINES, RESULT_TAGS
 
 webfrontend = Blueprint(
     "frontend",
@@ -26,6 +26,8 @@ def main():
     return render_template(
         "frontend/main.html",
         gallery_imgs=GALLERY_IMGS,
+        loadingLine="uploading lerk...",
+        loadedLine=random.choice(RESULT_TAGS),
         branding_tagline=random.choice(BRANDING_TAGLINES),
     )
 

@@ -13,7 +13,7 @@ app.config.from_object(config)
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = app.config["SECRETS_JSON_FP"]
 
 from .api import api
-app.register_blueprint(api, subdomain="api")
+app.register_blueprint(api, url_prefix="/api")
 
 from .frontend import webfrontend
 app.register_blueprint(webfrontend)

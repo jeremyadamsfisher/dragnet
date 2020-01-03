@@ -5,7 +5,7 @@ BRANDING_TAGLINES = [
     "style transfer for drag queens"
 ]
 
-TAGS = [
+RESULT_TAGS = [
     "Tens! Tens across the board!",
     "America, shes stunning!",
 ]

@@ -10,6 +10,12 @@ setUpFileForm();
 </script>
 {% endblock %}
 
+{% block meta %}
+<meta id="enqueueUrl"  enqueueurl="{{url_for('api.enqueue')}}">
+<meta id="loadingLine" loadingline="{{loadingLine}}">
+<meta id="loadedLine"  loadedline="{{loadedLine}}">
+{% endblock %}
+
 {% block content %}
 <div>
 

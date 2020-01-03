@@ -53,10 +53,10 @@ def enqueue():
             client.create_task(parent, {
                 "app_engine_http_request": {
                     "http_method": "GET",
-                    "relative_uri": url_for("predict", img_id=img_id),
+                    "relative_uri": url_for(".predict", img_id=img_id),
                 }
             })
-            j = {"result": url_for("result", img_id=img_id)}
+            j = {"result": url_for("frontend.result", img_id=img_id)}
             return make_response(jsonify(j), 200)
 
 

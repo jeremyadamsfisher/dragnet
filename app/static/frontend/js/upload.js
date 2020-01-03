@@ -1,8 +1,8 @@
 "use strict";
 
 function showFileForm(_showFileForm) {
-    let formField = document.getElementById("files");
-    let progress = document.getElementById("uploadProgress");
+    const formField = document.getElementById("files");
+    const progress = document.getElementById("uploadProgress");
     if (_showFileForm) {
         formField.style.display = "none";
         progress.style.display = "inline-block";
@@ -17,22 +17,25 @@ function showError(err) {
     alert(`Error: ${err}`);
 }
 
+function showMessageOnUploadScreen(msg) {
+
+}
+
 function setUpFileForm() {
-    let fileForm = document.getElementById("files");
+    const fileForm = document.getElementById("files");
+    const enqueueUrl = document.getElementById("enqueueUrl").getAttribute("enqueueurl");
     fileForm.onsubmit = (event) => {
         event.preventDefault();
         showFileForm(true);
-        let img = document.getElementById("fileChooser").files[0];
-        fetch("/enqueue", {method: "POST", body: img})
+        const img = document.getElementById("fileChooser").files[0];
+        fetch(enqueueUrl, {method: "POST", body: img})
             .then(response => response.json())
-            .then(j => window.location.replace(j.result))
+            .then(j => {
+            	alert(j.result);
+			})
             .catch(err => {
                 showError(err);
                 showFileForm(false);
-            });
+            })
     };
-};
-
-window.onload = () => {
-    setUpFileForm();
 };
