@@ -12,27 +12,38 @@ setUpFileForm();
 
 {% block meta %}
 <meta id="enqueueUrl"  enqueueurl="{{url_for('api.enqueue')}}">
+<meta id="checkProgressUrl"  checkprogressurl="{{url_for('api.checkprogress', img_id='')}}">
 <meta id="loadingLine" loadingline="{{loadingLine}}">
 <meta id="loadedLine"  loadedline="{{loadedLine}}">
 {% endblock %}
 
 {% block content %}
-<div>
-
 <h1>{{branding_tagline}}</h1>
 tldr; input a look (🧔) and we'll give you a <i>lerk</i> (👸)
 <br>
 <div class="fileform">
-    <div id="uploadProgress" style="display:none;">
-        <h2>uploading lerk...</h2>
+
+    <!--  files view  -->
+    <form id="filesView" style="display:inline-block;">
+        <input type="file" name="file" id="fileChooser"/>
+        <button>Submit</button>
+    </form>
+
+    <!--  progress view  -->
+    <div id="uploadProgressView" style="display:none;">
+        <h2 id="uploadProgressViewLabel">uploading lerk...</h2>
         <div style="text-align: center; margin-bottom: 25px;">
             <div id="loader" style="display: inline-block"></div>
         </div>
     </div>
-    <form id="files" method="post" enctype="multipart/form-data"  style="display:inline-block;">
-        <input type="file" name="file" id="fileChooser"/>
-        <button>Submit</button>
-    </form>
+
+    <!--  results view  -->
+    <div id="resultsView" style="display:none;">
+        <h2 id="resultsViewLabel">still shantaying...</h2>
+        <img id="resultImg" src="" style="width:512px;display:none"/>
+        <button class="btn" onclick="toggleView('default');">TAKE ANOTHER?</button>
+    </div>
+
 </div>
 <b>Tips:</b>
 <ul>

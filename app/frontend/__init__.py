@@ -30,12 +30,3 @@ def main():
         loadedLine=random.choice(RESULT_TAGS),
         branding_tagline=random.choice(BRANDING_TAGLINES),
     )
-
-
-@webfrontend.route("/result/<img_id>")
-def result(img_id: str):
-    """render the result of the person in drag"""
-    return render_template(
-        "result.html",
-        tag=random.choice(TAGS)
-    )

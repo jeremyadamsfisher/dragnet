@@ -56,7 +56,7 @@ def enqueue():
                     "relative_uri": url_for(".predict", img_id=img_id),
                 }
             })
-            j = {"result": url_for("frontend.result", img_id=img_id)}
+            j = {"result": url_for(".checkprogress", img_id=img_id)}
             return make_response(jsonify(j), 200)
 
 
