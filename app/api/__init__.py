@@ -10,7 +10,6 @@ import tempfile
 import io
 import uuid
 
-from google.cloud import tasks_v2
 from os import path
 from flask import (
     url_for,
@@ -22,7 +21,6 @@ from flask import (
 )
 
 from . import utils
-from .storage import download, upload
 from .machine_learning import translate
 
 @api.route("/enqueue", methods=["POST"])
@@ -41,22 +39,13 @@ def enqueue():
                     img = PIL.Image.open(io.BytesIO(payload)).convert("RGB")
                     resized_img = utils.resize_image(img)
                 except OSError:
-                    abort(415)
+                    abort(415)  # image that PIL cannot ingest
                 resized_img.save(fp, "JPEG")
-                upload(fp, img_id, app.config["GCLOUD_INTERMEDIARY_BUCKET"])
-            client = tasks_v2.CloudTasksClient()
-            parent = client.queue_path(
-                app.config["GCLOUD_PROJECT_NAME"],
-                app.config["GCLOUD_REGION"],
-                app.config["GCLOUD_QUEUE_NAME"],
-            )
-            client.create_task(parent, {
-                "app_engine_http_request": {
-                    "http_method": "GET",
-                    "relative_uri": url_for(".predict", img_id=img_id),
-                }
-            })
+                utils.upload_gcp_bucket(fp, img_id, app.config["GCLOUD_INTERMEDIARY_BUCKET"])
+            # run the machine learning task on a worker using gcloud tasks
+            utils.create_gcloud_task("GET", url_for(".predict", img_id=img_id))
             j = {"result": url_for(".checkprogress", img_id=img_id)}
+
             return make_response(jsonify(j), 200)
 
 
@@ -82,8 +71,8 @@ def predict(img_id: str):
     with tempfile.TemporaryDirectory() as t_dir:
         fp_in = path.join(t_dir, "in.jpg")
         fp_out = path.join(t_dir, "out.jpg")
-        download(fp_in, img_id, app.config["GCLOUD_INTERMEDIARY_BUCKET"])
+        utils.download_gcp_bucket(fp_in, img_id, app.config["GCLOUD_INTERMEDIARY_BUCKET"])
         img = PIL.Image.open(fp_in).convert("RGB")
         img = translate(img)
         img.save(fp_out, format="JPEG")
-        upload(fp_out, img_id, app.config["GCLOUD_DRAG_BUCKET"])
+        utils.upload_gcp_bucket(fp_out, img_id, app.config["GCLOUD_DRAG_BUCKET"])
