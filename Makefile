@@ -11,6 +11,10 @@ test:
 clean:
 	rm **/*.pyc
 
+init:
+	git submodule init \
+	&& git submodule update
+
 cloudbuild:
 	gcloud builds submit --tag gcr.io/dragnet/dragnet .
 
