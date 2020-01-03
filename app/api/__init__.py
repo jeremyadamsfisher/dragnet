@@ -1,28 +1,31 @@
+from flask import Blueprint
+api = Blueprint(
+    "api",
+    __name__,
+)
+
 import requests
 import PIL
-import os
 import tempfile
 import io
 import uuid
 
 from google.cloud import tasks_v2
 from os import path
-from flask import (url_for, request, make_response, jsonify, abort)
+from flask import (
+    url_for,
+    request,
+    make_response,
+    jsonify,
+    abort,
+    current_app as app
+)
 
 from . import utils
 from .storage import download, upload
-from .translate import translate
+from .machine_learning import translate
 
-from app import app
-
-client = tasks_v2.CloudTasksClient()
-parent = client.queue_path(
-    app.config["GCLOUD_PROJECT_NAME"],
-    app.config["GCLOUD_REGION"],
-    app.config["GCLOUD_QUEUE_NAME"],
-)
-
-@app.route("/enqueue", methods=["POST"])
+@api.route("/enqueue", methods=["POST"])
 def enqueue():
     """view method: upload the user profile image, enqueue
     to cloud tasks send back redirect information"""
@@ -41,6 +44,12 @@ def enqueue():
                     abort(415)
                 resized_img.save(fp, "JPEG")
                 upload(fp, img_id, app.config["GCLOUD_INTERMEDIARY_BUCKET"])
+            client = tasks_v2.CloudTasksClient()
+            parent = client.queue_path(
+                app.config["GCLOUD_PROJECT_NAME"],
+                app.config["GCLOUD_REGION"],
+                app.config["GCLOUD_QUEUE_NAME"],
+            )
             client.create_task(parent, {
                 "app_engine_http_request": {
                     "http_method": "GET",
@@ -51,7 +60,7 @@ def enqueue():
             return make_response(jsonify(j), 200)
 
 
-@app.route("/checkprogress/<img_id>")
+@api.route("/checkprogress/<img_id>")
 def checkprogress(img_id: str):
     """ping cloud tasks to see if the image is cooked"""
     drag_bucket = app.config["GCLOUD_DRAG_BUCKET"]
@@ -63,7 +72,7 @@ def checkprogress(img_id: str):
         return make_response(jsonify({"status": "done", "url": url}))
 
 
-@app.route("/predict/<img_id>")
+@api.route("/predict/<img_id>")
 def predict(img_id: str):
     """predict what someone looks like in drag and upload it to gcp
     

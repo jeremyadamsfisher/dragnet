@@ -1,31 +1,36 @@
-import os
 import random
 from pathlib import Path
-from flask import render_template
+from flask import render_template, Blueprint
 
 from .constants import BRANDING_TAGLINES, TAGS
-from app import app
+
+webfrontend = Blueprint(
+    "frontend",
+    __name__,
+    template_folder="templates",
+    static_folder="static"
+)
 
 GALLERY_IMGS = []
-for comparison_dir in Path("./app/static/imgs").glob("*"):
+for comparison_dir in Path("./app/static/frontend/imgs").glob("*"):
     if comparison_dir.is_dir():
         GALLERY_IMGS.append((
-            f"imgs/{comparison_dir.name}/norm.jpg",
-            f"imgs/{comparison_dir.name}/drag.jpg"
+            f"frontend/imgs/{comparison_dir.name}/norm.jpg",
+            f"frontend/imgs/{comparison_dir.name}/drag.jpg"
         ))
 
-@app.route("/")
+@webfrontend.route("/")
 def main():
     """view method: landing page -- insert the gallery images and
     branding tagline"""
     return render_template(
-        "main.html",
+        "frontend/main.html",
         gallery_imgs=GALLERY_IMGS,
         branding_tagline=random.choice(BRANDING_TAGLINES),
     )
 
 
-@app.route("/result/<img_id>")
+@webfrontend.route("/result/<img_id>")
 def result(img_id: str):
     """render the result of the person in drag"""
     return render_template(

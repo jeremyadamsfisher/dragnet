@@ -1,8 +1,7 @@
 PY=~/miniconda3/envs/dragnet/bin/python
 
 serve:
-	export DRAGNET_LOCAL_DEPLOYMENT=1 \
-	&& export GOOGLE_APPLICATION_CREDENTIALS="$(PWD)/secrets.json" \
+	export DRAGNET_DEPLOYMENT=local \
 	&& $(PY) main.py
 
 test:

@@ -9,7 +9,7 @@ ADD requirements.txt ./requirements.txt
 RUN pip3 install -r  ./requirements.txt \
                && rm ./requirements.txt
 
-ADD secrets.json .env ./
+ADD secrets.json ./
 ADD . /app
-CMD export GOOGLE_APPLICATION_CREDENTIALS="./secrets.json" \
+CMD export DRAGNET_DEPLOYMENT="production" \
     && gunicorn -b :$PORT main:app

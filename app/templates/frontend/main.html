@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "frontend/base.html" %}
 
 {% block script%}
-<script type="text/javascript" src="{{url_for('static', filename='js/upload.js')}}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='frontend/js/upload.js')}}"></script>
 {% endblock %}
 
 {% block endscript%}
@@ -33,9 +33,9 @@ tldr; input a look (🧔) and we'll give you a <i>lerk</i> (👸)
     <li>Look directly at the camera</li>
     <li>Keep the lighting neutral and don't use any filters (e.g. black and white)</li>
 </ul>
-{% include 'about.html' %}
-{% include 'gallery.html' %}
-{% include 'footer_stuff.html' %}
+{% include 'frontend/about.html' %}
+{% include 'frontend/gallery.html' %}
+{% include 'frontend/footer_stuff.html' %}
 </div>
 <div height="225"></div>
 {% endblock %}

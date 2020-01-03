@@ -1,11 +1,19 @@
 import os
 from flask import Flask
-from .config import ProdConfig, LocalConfig
+from .config import configs
 
 app = Flask(__name__, instance_relative_config=True)
-is_local = os.environ.get("DRAGNET_LOCAL_DEPLOYMENT", False)
-app.config.from_object(LocalConfig() if is_local else ProdConfig())
-
+try:
+    conf_setting = os.environ["DRAGNET_DEPLOYMENT"]
+    config = configs[conf_setting]()
+except KeyError:
+    raise Exception("configuration not specified or specified"
+                    "configuration does not exist!")
+app.config.from_object(config)
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = app.config["SECRETS_JSON_FP"]
 
-from app import views, backend
+from .api import api
+app.register_blueprint(api, subdomain="api")
+
+from .frontend import webfrontend
+app.register_blueprint(webfrontend)
