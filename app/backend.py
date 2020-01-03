@@ -17,9 +17,9 @@ from app import app
 
 client = tasks_v2.CloudTasksClient()
 parent = client.queue_path(
-    os.environ["GCLOUD_PROJECT_NAME"],
-    os.environ["GCLOUD_REGION"],
-    os.environ["GCLOUD_QUEUE_NAME"],
+    app.config["GCLOUD_PROJECT_NAME"],
+    app.config["GCLOUD_REGION"],
+    app.config["GCLOUD_QUEUE_NAME"],
 )
 
 @app.route("/enqueue", methods=["POST"])
@@ -40,7 +40,7 @@ def enqueue():
                 except OSError:
                     abort(415)
                 resized_img.save(fp, "JPEG")
-                upload(fp, img_id, os.environ["GCLOUD_INTERMEDIARY_BUCKET"])
+                upload(fp, img_id, app.config["GCLOUD_INTERMEDIARY_BUCKET"])
             client.create_task(parent, {
                 "app_engine_http_request": {
                     "http_method": "GET",
@@ -54,7 +54,7 @@ def enqueue():
 @app.route("/checkprogress/<img_id>")
 def checkprogress(img_id: str):
     """ping cloud tasks to see if the image is cooked"""
-    drag_bucket = os.environ["GCLOUD_DRAG_BUCKET"]
+    drag_bucket = app.config["GCLOUD_DRAG_BUCKET"]
     url = f"https://storage.googleapis.com/{drag_bucket}/{img_id}"
     r = requests.get(url)
     if r.status_code == 404:
@@ -73,8 +73,8 @@ def predict(img_id: str):
     with tempfile.TemporaryDirectory() as t_dir:
         fp_in = path.join(t_dir, "in.jpg")
         fp_out = path.join(t_dir, "out.jpg")
-        download(fp_in, img_id, os.environ["GCLOUD_INTERMEDIARY_BUCKET"])
+        download(fp_in, img_id, app.config["GCLOUD_INTERMEDIARY_BUCKET"])
         img = PIL.Image.open(fp_in).convert("RGB")
         img = translate(img)
         img.save(fp_out, format="JPEG")
-        upload(fp_out, img_id, os.environ["GCLOUD_DRAG_BUCKET"])
+        upload(fp_out, img_id, app.config["GCLOUD_DRAG_BUCKET"])
