@@ -1,0 +1,41 @@
+{% extends "frontend/main.html" %}
+
+{% block script%}
+<script type="text/javascript" src="{{url_for('static', filename='frontend/js/app.js')}}"></script>
+{% endblock %}
+
+{% block meta %}
+<meta id="enqueueUrl"  enqueueurl="{{url_for('api.enqueue')}}">
+<meta id="checkProgressUrl"  checkprogressurl="{{url_for('api.checkprogress', img_id='')}}">
+<meta id="loadingLine" loadingline="{{loadingLine}}">
+<meta id="loadedLine"  loadedline="{{loadedLine}}">
+{% endblock %}
+
+{% block app %}
+<div class="fileform">
+    <!--  files view  -->
+    <form id="filesView" style="display:inline-block;">
+        <input type="file" name="file" id="fileChooser"/>
+        <button>Submit</button>
+    </form>
+    <!--  progress view  -->
+    <div id="uploadProgressView" style="display:none;">
+        <h2 id="uploadProgressViewLabel">uploading lerk...</h2>
+        <div style="text-align: center; margin-bottom: 25px;">
+            <div id="loader" style="display: inline-block"></div>
+        </div>
+    </div>
+    <!--  results view  -->
+    <div id="resultsView" style="display:none;">
+        <h2 id="resultsViewLabel">still shantaying...</h2>
+        <img id="resultImg" src="" style="width:512px;display:none"/>
+        <button class="btn" onclick="toggleView('default');">TAKE ANOTHER?</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block endscript%}
+<script>
+setUpFileForm();
+</script>
+{% endblock %}

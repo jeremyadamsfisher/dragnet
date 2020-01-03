@@ -1,55 +1,10 @@
 {% extends "frontend/base.html" %}
 
-{% block script%}
-<script type="text/javascript" src="{{url_for('static', filename='frontend/js/upload.js')}}"></script>
-{% endblock %}
-
-{% block endscript%}
-<script>
-setUpFileForm();
-</script>
-{% endblock %}
-
-{% block meta %}
-<meta id="enqueueUrl"  enqueueurl="{{url_for('api.enqueue')}}">
-<meta id="checkProgressUrl"  checkprogressurl="{{url_for('api.checkprogress', img_id='')}}">
-<meta id="loadingLine" loadingline="{{loadingLine}}">
-<meta id="loadedLine"  loadedline="{{loadedLine}}">
-{% endblock %}
-
 {% block content %}
 <h1>{{branding_tagline}}</h1>
 tldr; input a look (🧔) and we'll give you a <i>lerk</i> (👸)
 <br>
-<div class="fileform">
-
-    <!--  files view  -->
-    <form id="filesView" style="display:inline-block;">
-        <input type="file" name="file" id="fileChooser"/>
-        <button>Submit</button>
-    </form>
-
-    <!--  progress view  -->
-    <div id="uploadProgressView" style="display:none;">
-        <h2 id="uploadProgressViewLabel">uploading lerk...</h2>
-        <div style="text-align: center; margin-bottom: 25px;">
-            <div id="loader" style="display: inline-block"></div>
-        </div>
-    </div>
-
-    <!--  results view  -->
-    <div id="resultsView" style="display:none;">
-        <h2 id="resultsViewLabel">still shantaying...</h2>
-        <img id="resultImg" src="" style="width:512px;display:none"/>
-        <button class="btn" onclick="toggleView('default');">TAKE ANOTHER?</button>
-    </div>
-
-</div>
-<b>Tips:</b>
-<ul>
-    <li>Look directly at the camera</li>
-    <li>Keep the lighting neutral and don't use any filters (e.g. black and white)</li>
-</ul>
+{% block app %}{% endblock %}
 {% include 'frontend/about.html' %}
 {% include 'frontend/gallery.html' %}
 {% include 'frontend/footer_stuff.html' %}

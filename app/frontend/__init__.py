@@ -24,7 +24,7 @@ def main():
     """view method: landing page -- insert the gallery images and
     branding tagline"""
     return render_template(
-        "frontend/main.html",
+        "frontend/app.html",
         gallery_imgs=GALLERY_IMGS,
         loadingLine="uploading lerk...",
         loadedLine=random.choice(RESULT_TAGS),
