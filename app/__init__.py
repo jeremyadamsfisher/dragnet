@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from .config import configs
+from config import configs
 
 app = Flask(__name__, instance_relative_config=True)
 try:
