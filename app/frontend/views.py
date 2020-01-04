@@ -20,7 +20,7 @@ def main():
     return render_template(
         "frontend/app.html",
         gallery_imgs=GALLERY_IMGS,
-        loadingLine="uploading lerk...",
+        loadingLine="sending lerk to the cloud...",
         loadedLine=random.choice(RESULT_TAGS),
         branding_tagline=random.choice(BRANDING_TAGLINES),
     )

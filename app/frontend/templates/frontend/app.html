@@ -6,7 +6,6 @@
 
 {% block meta %}
 <meta id="enqueueUrl"  enqueueurl="{{url_for('api.enqueue')}}">
-<meta id="checkProgressUrl"  checkprogressurl="{{url_for('api.checkprogress', img_id='')}}">
 <meta id="loadingLine" loadingline="{{loadingLine}}">
 <meta id="loadedLine"  loadedline="{{loadedLine}}">
 {% endblock %}
@@ -27,7 +26,7 @@
     </div>
     <!--  results view  -->
     <div id="resultsView" style="display:none;">
-        <h2 id="resultsViewLabel">still shantaying...</h2>
+        <h2 id="resultsViewLabel"></h2>
         <img id="resultImg" src="" style="width:512px;display:none"/>
         <button class="btn" onclick="toggleView('default');">TAKE ANOTHER?</button>
     </div>

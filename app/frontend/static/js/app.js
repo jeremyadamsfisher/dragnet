@@ -57,9 +57,13 @@ function setUpFileForm() {
         fetch(enqueueUrl, {method: "POST", body: img})
             .then(response => response.json())
             .then(j => {
-            	setMessage(loadedLine);
-            	toggleView("predicting");
-            	pingBackendForImage(j.img_id, 30);
+            	setMessage("still shantaying...");
+            	pingBackendForImage(j.result, 50, (resultUrl) => {
+                    setDragImgSrc(resultUrl);
+					setMessage(loadedLine);
+					toggleView("result");
+            	});
+
 			})
             .catch(err => {
             	toggleView("default");
@@ -68,19 +72,20 @@ function setUpFileForm() {
     };
 }
 
-function pingBackendForImage(imgId, n) {
+function pingBackendForImage(url, n, callback) {
     if (n === 0) {
-        throw new Error("time out!");
+        toggleView("default");
+		showError("time out!");
     } else {
-    	const url = document.getElementById("checkProgressUrl")
-    		.getAttribute("checkprogressurl");
-        fetch(url + imgId)
+        fetch(url)
             .then(response => response.json())
             .then(j => {
                 if (j.status === "loading") {
-                    setTimeout(() => pingBackendForImage(imgId, n-1), 1000);
+                    setTimeout(() => pingBackendForImage(url, n-1, callback), 1000);
                 } else if (j.status === "done") {
-                    showDrag(j.url);
+                	callback(j.url);
+                } else {
+                	throw new Error("invalid response");
                 }
             });
     }
