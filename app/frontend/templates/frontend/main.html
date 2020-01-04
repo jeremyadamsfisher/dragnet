@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div>
+    <h1>{{branding_tagline}}</h1>
+    tldr; input a look (🧔) and we'll give you a <i>lerk</i> (👸)
+    <br>
+    {% block app %}{% endblock %}
+    {% include 'frontend/about.html' %}
+    {% include 'frontend/gallery.html' %}
+    {% include 'frontend/footer_stuff.html' %}
+</div>
+<div height="225"></div>
+{% endblock %}

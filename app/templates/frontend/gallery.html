@@ -1,9 +1,0 @@
-<h1>gallery</h1>
- <div class="flex-container">
-    {% for (norm_img, drag_img) in gallery_imgs %}
-    <div class="gallery-img">
-        <img src="{{url_for('static', filename=norm_img)}}" width="200px" height="266">
-        <img src="{{url_for('static', filename=drag_img)}}" width="200px" height="266">
-    </div>
-    {% endfor %}
-</div> 

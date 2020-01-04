@@ -1,7 +1,7 @@
 {% extends "frontend/main.html" %}
 
 {% block script%}
-<script type="text/javascript" src="{{url_for('static', filename='frontend/js/app.js')}}"></script>
+<script type="text/javascript" src="{{url_for('.static', filename='js/app.js')}}"></script>
 {% endblock %}
 
 {% block meta %}

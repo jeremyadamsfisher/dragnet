@@ -7,11 +7,11 @@ class BaseConfig:
     SECRETS_JSON_FP             = "./secrets.json"
 
 class LocalConfig(BaseConfig):
+    EXPLAIN_TEMPLATE_LOADING = True
     DEBUG = True
 
 class ProdConfig(BaseConfig):
     DEBUG = False
-
 
 configs = {
     "local": LocalConfig,

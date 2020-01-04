@@ -15,7 +15,6 @@ from flask import (
     abort,
     current_app as app
 )
-
 from . import utils
 from .machine_learning import translate
 
