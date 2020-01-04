@@ -5,10 +5,7 @@ import os, sys
 
 sys.path.append(os.path.join(os.getcwd(), "pytorch-CycleGAN-and-pix2pix"))
 
-import numpy as np
 import torch
-import torchvision
-from data.single_dataset import SingleDataset
 from data.base_dataset import get_transform
 from models.cycle_gan_model import CycleGANModel
 from util.util import tensor2im
