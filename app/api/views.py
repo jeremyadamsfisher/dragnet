@@ -72,3 +72,4 @@ def predict(img_id: str):
         img = translate(img)
         img.save(fp_out, format="JPEG")
         utils.upload_gcp_bucket(fp_out, img_id, app.config["GCLOUD_DRAG_BUCKET"])
+        return "", 200
