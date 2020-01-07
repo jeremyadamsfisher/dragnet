@@ -15,7 +15,7 @@
 <div class="app-background">
     <!--  files view  -->
     <div id="dragzone">
-        Drop image here or click!
+        Drop image or click here!
     </div>
     <!--  progress view  -->
     <div id="uploadProgressView" style="display:none;">
@@ -27,8 +27,9 @@
     <!--  results view  -->
     <div id="resultsView" style="display:none;">
         <h2 id="resultsViewLabel"></h2>
-        <img id="resultImg" src="" style="width:512px;display:none"/>
-        <button class="btn" onclick="toggleView('default');">TAKE ANOTHER?</button>
+        <img id="resultImg" src="" style="width:512px"/>
+        <br><br>
+        <a class="btn" onclick="toggleView('default');">TAKE ANOTHER?</a>
     </div>
 </div>
 {% endblock %}
@@ -36,6 +37,5 @@
 {% block endscript%}
 <script>
 init();
-// setUpFileForm();
 </script>
 {% endblock %}

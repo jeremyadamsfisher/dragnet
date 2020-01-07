@@ -6,7 +6,7 @@ function toggleView(view) {
     const resultView = document.getElementById("resultsView")
 
 	if (view === "default") {
-		formFieldView.style.display = "inline-block";
+		formFieldView.style.display = "block";
         progressView.style.display = "none";
         resultView.style.display = "none";
 	} else if (view === "uploading" || view === "predicting") {
@@ -64,8 +64,10 @@ function setUpDropZone() {
          url: enqueueUrl,
          createImageThumbnails: false,
          init: function() {
-            this.on("addedfile", file => {upload(file);});
+            this.on("addedfile", file => { upload(file); });
+            this.on("complete", file => { this.removeAllFiles(); });
         }
+
     });
 }
 

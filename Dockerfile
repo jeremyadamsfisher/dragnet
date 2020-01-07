@@ -8,7 +8,7 @@ ENV PATH /env/bin:$PATH
 ADD requirements.txt ./requirements.txt
 RUN pip3 install -r  ./requirements.txt \
                && rm ./requirements.txt
-
+RUN python3 -c "from PIL import PILLOW_VERSION; print(PILLOW_VERSION)"
 
 # replace with `FROM base` to build from scratch
 FROM gcr.io/dragnet/dragnet-base
