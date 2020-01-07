@@ -1,4 +1,6 @@
 PY=~/miniconda3/envs/dragnet/bin/python
+DOCKER_IMG=gcr.io/dragnet/dragnet
+DOCKER_IMG_BASE=gcr.io/dragnet/dragnet-base
 
 serve:
 	export DRAGNET_DEPLOYMENT=local \
@@ -12,15 +14,17 @@ clean:
 
 init:
 	git submodule init \
-	&& git submodule update
+	&& git submodule update \
+	&& docker pull $(DOCKER_IMG_BASE)
 
-cloudbuild:
-	gcloud builds submit --tag gcr.io/dragnet/dragnet .
+buildbase:
+	docker build -t $(DOCKER_IMG_BASE) \
+			     --target base . \
+	&& docker push $(DOCKER_IMG_BASE)
 
-deploy:
-	gcloud app deploy --image-url=gcr.io/dragnet/dragnet
+build: buildbase
+	docker build -t $(DOCKER_IMG) . \
+		--cache-from $(DOCKER_IMG_BASE)
 
-superdeploy: cloudbuild deploy
-
-docker:
-	docker build -t dragnet .
+deploy: build
+	gcloud app deploy --image-url=$(DOCKER_IMG)
