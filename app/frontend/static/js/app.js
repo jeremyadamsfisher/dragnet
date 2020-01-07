@@ -1,7 +1,7 @@
 "use strict";
 
 function toggleView(view) {
-	const formFieldView = document.getElementById("filesView");
+	const formFieldView = document.getElementById("dragzone");
     const progressView = document.getElementById("uploadProgressView");
     const resultView = document.getElementById("resultsView")
 
@@ -37,41 +37,6 @@ function showError(err) {
     alert(`Error: ${err}`);
 }
 
-function setUpFileForm() {
-    const fileForm = document.getElementById("filesView");
-
-    const enqueueUrl = document.getElementById("enqueueUrl")
-    	.getAttribute("enqueueurl");
-    const loadingLine = document.getElementById("loadingLine")
-    	.getAttribute("loadingline");
-    const loadedLine = document.getElementById("loadedLine")
-    	.getAttribute("loadedline")
-
-    fileForm.onsubmit = (event) => {
-        event.preventDefault();
-
-        setMessage(loadingLine);
-        toggleView("uploading");
-
-        const img = document.getElementById("fileChooser").files[0];
-        fetch(enqueueUrl, {method: "POST", body: img})
-            .then(response => response.json())
-            .then(j => {
-            	setMessage("still shantaying...");
-            	pingBackendForImage(j.result, 50, (resultUrl) => {
-                    setDragImgSrc(resultUrl);
-					setMessage(loadedLine);
-					toggleView("result");
-            	});
-
-			})
-            .catch(err => {
-            	toggleView("default");
-                showError(err);
-            })
-    };
-}
-
 function pingBackendForImage(url, n, callback) {
     if (n === 0) {
         toggleView("default");
@@ -89,4 +54,49 @@ function pingBackendForImage(url, n, callback) {
                 }
             });
     }
+}
+
+function setUpDropZone() {
+    const enqueueUrl = document
+        .getElementById("enqueueUrl")
+        .getAttribute("enqueueurl");
+    const dropZone = new Dropzone("#dragzone", {
+         url: enqueueUrl,
+         createImageThumbnails: false,
+         init: function() {
+            this.on("addedfile", file => {upload(file);});
+        }
+    });
+}
+
+function upload(img_file) {
+    const enqueueUrl = document.getElementById("enqueueUrl")
+    	.getAttribute("enqueueurl");
+    const loadingLine = document.getElementById("loadingLine")
+    	.getAttribute("loadingline");
+    const loadedLine = document.getElementById("loadedLine")
+        .getAttribute("loadedline");
+    
+    setMessage(loadingLine);
+    toggleView("uploading");
+
+    fetch(enqueueUrl, {method: "POST", body: img_file})
+        .then(response => response.json())
+        .then(j => {
+            setMessage("still shantaying...");
+            pingBackendForImage(j.result, 50, (resultUrl) => {
+                setDragImgSrc(resultUrl);
+                setMessage(loadedLine);
+                toggleView("result");
+            });
+
+        })
+        .catch(err => {
+            toggleView("default");
+            showError(err);
+        });
+}
+
+function init() {
+    setUpDropZone();
 }
