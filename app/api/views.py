@@ -33,6 +33,7 @@ def enqueue():
                 fp = path.join(t_dir, "in.jpg")
                 try:
                     img = PIL.Image.open(io.BytesIO(payload)).convert("RGB")
+                    img = PIL.ImageOps.exif_transpose(img)
                     resized_img = utils.resize_image(img)
                 except OSError:
                     abort(415)  # image that PIL cannot ingest
