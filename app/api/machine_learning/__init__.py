@@ -8,12 +8,16 @@ from .face_evolve import detect_faces
 from .cyclegan import translate_face_subimage
 
 
+class FaceNotFound(Exception):
+    pass
+
+
 def translate(img: Image) -> Image:
     """extract the face out from an image, get it into drag"""
     bounding_boxes, _ = detect_faces(img)
 
     if len(bounding_boxes) == 0:
-        raise ValueError
+        raise FaceNotFound
 
     for bounding_box in bounding_boxes:
         x1, y1, x2, y2, *_ = bounding_box.astype(np.uint32)
