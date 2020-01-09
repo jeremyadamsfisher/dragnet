@@ -138,3 +138,24 @@ a {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+/* error message pane */
+
+.message-panel {
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 10px;
+    display: none;
+}
+
+.message-panel:hover {
+    opacity: 50%;
+}
+
+.message-panel-info {
+    background-color:whitesmoke;
+}
+
+.message-panel-error {
+    background-color:rgb(228, 152, 152);
+}

@@ -33,18 +33,26 @@ function setDragImgSrc(src, imgID) {
 	document.getElementById("resultImg").src = src;
     document.getElementById("uploadBtn").onclick = () => {
         fetch(uploadToGalleryUrl + imgID);
-        showInfo("Thanks for your submission! I'll review it and consider whether to include it in the gallery - Jeremy");
+        showInfo("Thanks for your submission! I'll review it and consider whether to include it in the gallery - Jeremy", "info");
     };
 }
 
 function showError(err) {
-    // todo: make this better
-    alert(`Error: ${err}`);
+    showInfo(err.message, "error");
 }
 
-function showInfo(msg) {
-    //todo: also this
-    showError(msg);
+function showInfo(msg, infoType) {
+    const messagePanel = document.getElementById("messagePanel");
+    if (infoType === "error") {
+        messagePanel.classList.add("message-panel-error");
+        messagePanel.classList.remove("message-panel-info");
+    } else {
+        messagePanel.classList.add("message-panel-info");
+        messagePanel.classList.remove("message-panel-error");
+    }
+    messagePanel.style.display = "block";
+    messagePanel.innerHTML = msg;
+    messagePanel.scrollIntoView(); 
 }
 
 function pingBackendForImage(url, n, callback) {
