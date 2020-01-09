@@ -27,9 +27,12 @@
     <!--  results view  -->
     <div id="resultsView" style="display:none;">
         <h2 id="resultsViewLabel"></h2>
-        <img id="resultImg" src="" style="width:512px"/>
-        <br><br>
-        <a class="btn" onclick="toggleView('default');">TAKE ANOTHER?</a>
+        <div>
+            <img id="resultImg" src="" width="512px" style="display:block; width:100%; max-width:512px"/>
+        </div>
+        <div style="padding: 25px 0px 25px 0px">
+            <a class="btn" onclick="toggleView('default');">TAKE ANOTHER?</a>
+        </div>
     </div>
 </div>
 {% endblock %}
