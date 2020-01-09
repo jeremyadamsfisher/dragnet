@@ -4,6 +4,7 @@ class BaseConfig:
     GCLOUD_REGION               = "us-east1"
     GCLOUD_QUEUE_NAME           = "dragnet-queue"
     GCLOUD_INTERMEDIARY_BUCKET  = "dragnet_raw_imgs"
+    GCLOUD_GALLERY_BUCKET       = "dragnet_gallery"
     SECRETS_JSON_FP             = "./secrets.json"
 
 class LocalConfig(BaseConfig):

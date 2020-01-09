@@ -27,14 +27,24 @@ function setMessage(msg) {
 	document.getElementById("resultsViewLabel").innerHTML = msg;
 }
 
-function setDragImgSrc(src) {
-	const dragImg = document.getElementById("resultImg");
-	dragImg.src = src;
+function setDragImgSrc(src, imgID) {
+    const uploadToGalleryUrl = document.getElementById("galleryUrl")
+        .getAttribute("galleryurl");
+	document.getElementById("resultImg").src = src;
+    document.getElementById("uploadBtn").onclick = () => {
+        fetch(uploadToGalleryUrl + imgID);
+        showInfo("Thanks for your submission! I'll review it and consider whether to include it in the gallery - Jeremy");
+    };
 }
 
 function showError(err) {
     // todo: make this better
     alert(`Error: ${err}`);
+}
+
+function showInfo(msg) {
+    //todo: also this
+    showError(msg);
 }
 
 function pingBackendForImage(url, n, callback) {
@@ -56,21 +66,6 @@ function pingBackendForImage(url, n, callback) {
     }
 }
 
-function setUpDropZone() {
-    const enqueueUrl = document
-        .getElementById("enqueueUrl")
-        .getAttribute("enqueueurl");
-    const dropZone = new Dropzone("#dragzone", {
-         url: enqueueUrl,
-         createImageThumbnails: false,
-         init: function() {
-            this.on("addedfile", file => { upload(file); });
-            this.on("complete", file => { this.removeAllFiles(); });
-        }
-
-    });
-}
-
 function upload(img_file) {
     const enqueueUrl = document.getElementById("enqueueUrl")
     	.getAttribute("enqueueurl");
@@ -86,8 +81,10 @@ function upload(img_file) {
         .then(response => response.json())
         .then(j => {
             setMessage("still shantaying...");
-            pingBackendForImage(j.result, 50, (resultUrl) => {
-                setDragImgSrc(resultUrl);
+            const imgId = j.img_id;
+            const checkProgressUrl = j.result;
+            pingBackendForImage(checkProgressUrl, 50, (resultUrl) => {
+                setDragImgSrc(resultUrl, imgId);
                 setMessage(loadedLine);
                 toggleView("result");
             });
@@ -97,6 +94,20 @@ function upload(img_file) {
             toggleView("default");
             showError(err);
         });
+}
+
+function setUpDropZone() {
+    const enqueueUrl = document
+        .getElementById("enqueueUrl")
+        .getAttribute("enqueueurl");
+    const dropZone = new Dropzone("#dragzone", {
+         url: enqueueUrl,
+         createImageThumbnails: false,
+         init: function() {
+            this.on("addedfile", file => { upload(file); });
+            this.on("complete", file => { this.removeAllFiles(); });
+        }
+    });
 }
 
 function init() {

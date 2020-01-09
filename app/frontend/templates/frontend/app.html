@@ -7,6 +7,7 @@
 
 {% block meta %}
 <meta id="enqueueUrl"  enqueueurl="{{url_for('api.enqueue')}}">
+<meta id="galleryUrl"  galleryurl="{{url_for('api.save_to_gallery', img_id='')}}">
 <meta id="loadingLine" loadingline="{{loadingLine}}">
 <meta id="loadedLine"  loadedline="{{loadedLine}}">
 {% endblock %}
@@ -30,8 +31,11 @@
         <div>
             <img id="resultImg" src="" width="512px" style="display:block; width:100%; max-width:512px"/>
         </div>
-        <div style="padding: 25px 0px 25px 0px">
-            <a class="btn" onclick="toggleView('default');">TAKE ANOTHER?</a>
+        <div style="padding: 35px 0px 25px 0px">
+            <a class="btn" onclick="toggleView('default');">TAKE ANOTHER</a>
+        </div>
+        <div style="padding: 0px 0px 25px 0px">
+            <a class="btn" id="uploadBtn">UPLOAD TO GALLERY</a> 
         </div>
     </div>
 </div>

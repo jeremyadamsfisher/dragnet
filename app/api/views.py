@@ -41,8 +41,10 @@ def enqueue():
                 utils.upload_gcp_bucket(fp, img_id, app.config["GCLOUD_INTERMEDIARY_BUCKET"])
             # run the machine learning task on a worker using gcloud tasks
             utils.create_gcloud_task("GET", url_for(".predict", img_id=img_id))
-            j = {"result": url_for(".checkprogress", img_id=img_id)}
-
+            j = {
+                "result": url_for(".checkprogress", img_id=img_id),
+                "img_id": img_id,
+            }
             return make_response(jsonify(j), 200)
 
 
@@ -74,3 +76,13 @@ def predict(img_id: str):
         img.save(fp_out, format="JPEG")
         utils.upload_gcp_bucket(fp_out, img_id, app.config["GCLOUD_DRAG_BUCKET"])
         return "", 200
+
+
+@api.route("/savetogallery/<img_id>")
+def save_to_gallery(img_id: str):
+    utils.copy_between_buckets(
+        img_id,
+        app.config["GCLOUD_DRAG_BUCKET"],
+        app.config["GCLOUD_GALLERY_BUCKET"]
+    )
+    return "", 200

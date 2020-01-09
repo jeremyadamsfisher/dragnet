@@ -29,6 +29,15 @@ def download_gcp_bucket(fp, f_name, bucket):
     blob.download_to_filename(fp)
 
 
+def copy_between_buckets(f_name, bucket_orig, bucket_new):
+    storage_client = storage.Client()
+    bucket_orig = storage_client.bucket(bucket_orig)
+    bucket_new = storage_client.bucket(bucket_new)
+    blob_copy = bucket_orig.copy_blob(
+        bucket_orig.blob(f_name), bucket_new, f_name
+    )
+
+
 def create_gcloud_task(method, relative_uri):
     client = tasks_v2.CloudTasksClient()
     parent = client.queue_path(
