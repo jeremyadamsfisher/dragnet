@@ -8,8 +8,6 @@
 {% block meta %}
 <meta id="enqueueUrl"  enqueueurl="{{url_for('api.enqueue')}}">
 <meta id="galleryUrl"  galleryurl="{{url_for('api.save_to_gallery', img_id='')}}">
-<meta id="loadingLine" loadingline="{{loadingLine}}">
-<meta id="loadedLine"  loadedline="{{loadedLine}}">
 {% endblock %}
 
 {% block app %}
@@ -46,6 +44,6 @@
 
 {% block endscript%}
 <script>
-init();
+init("{{ url_for('.get_quip', quiptype='') }}");
 </script>
 {% endblock %}

@@ -1,5 +1,7 @@
 "use strict";
 
+let quipUrl;
+
 function toggleView(view) {
 	const formFieldView = document.getElementById("dragzone");
     const progressView = document.getElementById("uploadProgressView");
@@ -77,12 +79,12 @@ function pingBackendForImage(url, n, callback) {
 function upload(img_file) {
     const enqueueUrl = document.getElementById("enqueueUrl")
     	.getAttribute("enqueueurl");
-    const loadingLine = document.getElementById("loadingLine")
-    	.getAttribute("loadingline");
-    const loadedLine = document.getElementById("loadedLine")
-        .getAttribute("loadedline");
+    // const loadingLine = document.getElementById("loadingLine")
+    // 	.getAttribute("loadingline");
+    // const loadedLine = document.getElementById("loadedLine")
+    //     .getAttribute("loadedline");
     
-    setMessage(loadingLine);
+    getQuip("loading", quip => { setMessage(quip); });
     toggleView("uploading");
 
     fetch(enqueueUrl, {method: "POST", body: img_file})
@@ -93,7 +95,7 @@ function upload(img_file) {
             const checkProgressUrl = j.result;
             pingBackendForImage(checkProgressUrl, 50, (resultUrl) => {
                 setDragImgSrc(resultUrl, imgId);
-                setMessage(loadedLine);
+                getQuip("loaded", quip => { setMessage(quip); });
                 toggleView("result");
             });
 
@@ -118,6 +120,13 @@ function setUpDropZone() {
     });
 }
 
-function init() {
+function getQuip(quipType, callback) {
+    fetch(quipUrl + quipType)
+        .then(resp => resp.json())
+        .then(j => { callback(j.quip); });
+}
+
+function init(_quipUrl) {
+    quipUrl = _quipUrl;
     setUpDropZone();
 }
