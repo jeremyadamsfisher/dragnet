@@ -6,11 +6,11 @@ from flask import render_template
 from .constants import BRANDING_TAGLINES, RESULT_TAGS
 
 GALLERY_IMGS = []
-for comparison_dir in Path(__file__).parent.glob("static/imgs/*"):
+for comparison_dir in Path.cwd().glob("app/static/imgs/gallery/*"):
     if comparison_dir.is_dir():
         GALLERY_IMGS.append((
-            f"imgs/{comparison_dir.name}/norm.jpg",
-            f"imgs/{comparison_dir.name}/drag.jpg"
+            f"imgs/gallery/{comparison_dir.name}/norm.jpg",
+            f"imgs/gallery/{comparison_dir.name}/drag.jpg"
         ))
 
 @webfrontend.route("/")
