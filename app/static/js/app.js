@@ -1,6 +1,6 @@
 "use strict";
 
-let quipUrl;
+let quipUrl, enqueueUrl, saveToGalleryUrl;
 
 function toggleView(view) {
 	const formFieldView = document.getElementById("dragzone");
@@ -24,23 +24,12 @@ function toggleView(view) {
 	}
 }
 
-function setMessage(msg) {
-	document.getElementById("uploadProgressViewLabel").innerHTML = msg;
-	document.getElementById("resultsViewLabel").innerHTML = msg;
-}
-
 function setDragImgSrc(src, imgID) {
-    const uploadToGalleryUrl = document.getElementById("galleryUrl")
-        .getAttribute("galleryurl");
 	document.getElementById("resultImg").src = src;
     document.getElementById("uploadBtn").onclick = () => {
-        fetch(uploadToGalleryUrl + imgID);
+        fetch(saveToGalleryUrl + imgID);
         showInfo("Thanks for your submission! I'll review it and consider whether to include it in the gallery - Jeremy", "info");
     };
-}
-
-function showError(err) {
-    showInfo(err.message, "error");
 }
 
 function showInfo(msg, infoType) {
@@ -55,6 +44,10 @@ function showInfo(msg, infoType) {
     messagePanel.style.display = "block";
     messagePanel.innerHTML = msg;
     messagePanel.scrollIntoView(); 
+}
+
+function showError(err) {
+    showInfo(err.message, "error");
 }
 
 function pingBackendForImage(url, n, callback) {
@@ -76,26 +69,22 @@ function pingBackendForImage(url, n, callback) {
     }
 }
 
-function upload(img_file) {
-    const enqueueUrl = document.getElementById("enqueueUrl")
-    	.getAttribute("enqueueurl");
-    // const loadingLine = document.getElementById("loadingLine")
-    // 	.getAttribute("loadingline");
-    // const loadedLine = document.getElementById("loadedLine")
-    //     .getAttribute("loadedline");
-    
-    getQuip("loading", quip => { setMessage(quip); });
+function predict(imgFile) {
+    const loadingViewLabel = document.getElementById("uploadProgressViewLabel");
+    const resultsViewLabel = document.getElementById("resultsViewLabel");
+
+    getQuip("uploading", quip => { loadingViewLabel.innerHTML = quip; });
     toggleView("uploading");
 
-    fetch(enqueueUrl, {method: "POST", body: img_file})
+    fetch(enqueueUrl, {method: "POST", body: imgFile})
         .then(response => response.json())
         .then(j => {
-            setMessage("still shantaying...");
+            getQuip("predicting", quip => { loadingViewLabel.innerHTML = quip; });
             const imgId = j.img_id;
             const checkProgressUrl = j.result;
             pingBackendForImage(checkProgressUrl, 50, (resultUrl) => {
                 setDragImgSrc(resultUrl, imgId);
-                getQuip("loaded", quip => { setMessage(quip); });
+                getQuip("done", quip => { resultsViewLabel.innerHTML = quip; });
                 toggleView("result");
             });
 
@@ -107,15 +96,12 @@ function upload(img_file) {
 }
 
 function setUpDropZone() {
-    const enqueueUrl = document
-        .getElementById("enqueueUrl")
-        .getAttribute("enqueueurl");
-    const dropZone = new Dropzone("#dragzone", {
+    new Dropzone("#dragzone", {
          url: enqueueUrl,
          createImageThumbnails: false,
          init: function() {
-            this.on("addedfile", file => { upload(file); });
-            this.on("complete", file => { this.removeAllFiles(); });
+            this.on("addedfile", imgFile => { predict(imgFile); });
+            this.on("complete", () => { this.removeAllFiles(); });
         }
     });
 }
@@ -126,7 +112,9 @@ function getQuip(quipType, callback) {
         .then(j => { callback(j.quip); });
 }
 
-function init(_quipUrl) {
+function init(_quipUrl, _enqueueUrl, _saveToGalleryUrl) {
     quipUrl = _quipUrl;
+    enqueueUrl = _enqueueUrl;
+    saveToGalleryUrl = _saveToGalleryUrl;
     setUpDropZone();
 }

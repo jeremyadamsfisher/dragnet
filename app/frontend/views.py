@@ -7,7 +7,12 @@ from flask import (
     make_response,
     jsonify
 )
-from .constants import BRANDING_TAGLINES, RESULT_TAGS
+from .constants import (
+    BRANDING_TAGLINES,
+    UPLOADINGS_TAGS,
+    PREDICTING_TAGS,
+    RESULT_TAGS,
+)
 
 GALLERY_IMGS = [
     (f"imgs/gallery/{comparison_dir.name}/norm.jpg",
@@ -29,9 +34,11 @@ def main():
 
 @webfrontend.route("/quip/<quiptype>")
 def get_quip(quiptype):
-    if quiptype == "loading":
-        quip = "sending lerk to the cloud..."
-    elif quiptype == "loaded":
+    if quiptype == "uploading":
+        quip = random.choice(UPLOADINGS_TAGS)
+    elif quiptype == "predicting":
+        quip = random.choice(PREDICTING_TAGS)
+    elif quiptype == "done":
         quip = random.choice(RESULT_TAGS)
     else:
         raise ValueError

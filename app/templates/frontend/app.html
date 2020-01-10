@@ -5,11 +5,6 @@
 <script type="text/javascript" src="{{url_for('static', filename='js/dropzone.js')}}"></script>
 {% endblock %}
 
-{% block meta %}
-<meta id="enqueueUrl"  enqueueurl="{{url_for('api.enqueue')}}">
-<meta id="galleryUrl"  galleryurl="{{url_for('api.save_to_gallery', img_id='')}}">
-{% endblock %}
-
 {% block app %}
 
 <div id="messagePanel" class="message-panel" onclick="this.style.display='none';"></div>
@@ -44,6 +39,9 @@
 
 {% block endscript%}
 <script>
-init("{{ url_for('.get_quip', quiptype='') }}");
+init("{{ url_for('.get_quip', quiptype='') }}",
+     "{{url_for('api.enqueue')}}",
+     "{{url_for('api.save_to_gallery', img_id='')}}",
+    );
 </script>
 {% endblock %}
